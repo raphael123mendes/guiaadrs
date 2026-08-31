@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AD Heritage — Discover Abu Dhabi</title>
+
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=Noto+Serif:wght@500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="theme.js"></script>
+<script>tailwind.config = AD_THEME_CONFIG;</script>
+
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.1); }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .leaflet-container { background-color: #051424 !important; font-family: 'Hanken Grotesk', sans-serif; }
+  .leaflet-tile-pane { filter: invert(100%) hue-rotate(180deg) brightness(90%) contrast(90%) saturate(60%); }
+  .custom-map-marker { background-color: #d97707; color: #2f1500; border-radius: 9999px; display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: transform .25s ease, box-shadow .25s ease; cursor:pointer; border: 2px solid rgba(253,230,138,0.6); }
+  .custom-map-marker:hover, .custom-map-marker.active { transform: scale(1.15); box-shadow: 0 10px 20px rgba(217,119,7,0.4); }
+  .leaflet-popup-content-wrapper { border-radius: 12px; background-color: #122131; color: #d4e4fa; border: 1px solid #46464c; }
+  .leaflet-popup-tip { background-color: #122131; }
+  .fab-pulse { animation: pulse 2.4s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(217,119,7,0.35); } 70% { box-shadow: 0 0 0 16px rgba(217,119,7,0); } 100% { box-shadow: 0 0 0 0 rgba(217,119,7,0); } }
+  .chip { transition: all .2s ease; }
+  .chip.active { background-color: #d97707; color: #2f1500; border-color: #d97707; }
+</style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-hidden flex h-screen">
+
+<!-- Side Navigation (tablet/desktop) -->
+<nav class="hidden md:flex flex-col h-full w-64 fixed left-0 top-0 z-40 bg-surface-container-lowest border-r border-outline-variant p-md">
+  <div class="flex items-center gap-sm mb-md mt-sm">
+    <span class="material-symbols-outlined text-soft-gold text-3xl">account_balance</span>
+    <div>
+      <h1 class="font-headline-sm text-headline-sm text-high-contrast-white leading-tight" id="sidebar-title">AD Heritage</h1>
+      <p class="text-xs text-on-surface-variant" id="sidebar-tagline">Modern Heritage</p>
+    </div>
+  </div>
+  <div class="flex items-center bg-surface-container rounded-full p-1 relative cursor-pointer border border-outline-variant mb-lg" id="lang-toggle">
+    <div class="absolute w-1/2 h-full bg-secondary-container rounded-full left-0 transition-transform duration-300 ease-in-out" id="lang-indicator"></div>
+    <span class="relative z-10 flex-1 text-center px-4 py-1.5 text-sm font-semibold transition-colors" id="lang-en">EN</span>
+    <span class="relative z-10 flex-1 text-center px-4 py-1.5 text-sm font-semibold transition-colors" id="lang-pt">PT</span>
+  </div>
+  <ul class="flex flex-col gap-xs flex-grow overflow-y-auto no-scrollbar" id="sidebar-categories">
+    <li>
+      <button class="cat-filter w-full flex items-center gap-md p-3 rounded-lg font-label-lg text-label-lg transition-all text-left bg-secondary-container text-on-secondary-container" data-cat="all">
+        <span class="material-symbols-outlined">home</span> <span id="sidebar-all-label">All Places</span>
+      </button>
+    </li>
+    <!-- category items injected by JS -->
+  </ul>
+  <a class="mt-md flex items-center gap-md p-3 text-on-surface-variant hover:text-soft-gold rounded-lg transition-all" href="#" id="side-nav-map-toggle">
+    <span class="material-symbols-outlined">map</span> <span id="sidebar-map-label">Full Map</span>
+  </a>
+  <div class="mt-md pt-md border-t border-outline-variant">
+    <p class="text-xs text-on-surface-variant leading-relaxed" id="sidebar-note"></p>
+  </div>
+</nav>
+
+<!-- Main content -->
+<main class="flex flex-col flex-1 h-full w-full md:ml-64 relative overflow-hidden">
+
+  <!-- Mobile top bar -->
+  <header class="md:hidden fixed top-0 w-full z-50 bg-surface-container-lowest/90 backdrop-blur-md border-b border-outline-variant">
+    <div class="flex justify-between items-center w-full px-lg h-16">
+      <span class="font-headline-sm text-headline-sm text-high-contrast-white">AD Heritage</span>
+      <div class="flex items-center gap-sm">
+        <div class="flex items-center bg-surface-container rounded-full p-1 relative cursor-pointer" id="lang-toggle-mobile">
+          <div class="absolute w-1/2 h-full bg-secondary-container rounded-full left-0 transition-transform duration-300 ease-in-out" id="lang-indicator-mobile"></div>
+          <span class="relative z-10 px-3 py-0.5 text-xs font-semibold transition-colors" id="lang-en-mobile">EN</span>
+          <span class="relative z-10 px-3 py-0.5 text-xs font-semibold transition-colors" id="lang-pt-mobile">PT</span>
+        </div>
+        <button class="material-symbols-outlined text-on-surface-variant" id="fab-map-toggle-mobile-icon">map</button>
+      </div>
+    </div>
+    <div class="flex gap-xs overflow-x-auto no-scrollbar px-lg pb-3" id="mobile-category-chips"></div>
+  </header>
+
+  <div class="relative z-10 w-full h-full overflow-y-auto no-scrollbar pt-28 md:pt-0" id="main-content-scroll">
+    <div class="px-lg md:px-xl py-xl max-w-[1440px] mx-auto flex flex-col gap-lg min-h-full">
+
+      <!-- Header -->
+      <div class="hidden md:flex justify-between items-start mb-md">
+        <div>
+          <h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-high-contrast-white mb-sm" id="discover-title">Discover Abu Dhabi</h2>
+          <p class="text-on-surface-variant max-w-xl text-body-lg font-body-lg" id="discover-subtitle"></p>
+        </div>
+      </div>
+
+      <!-- Search -->
+      <div class="w-full relative flex items-center glass-card rounded-xl p-2 focus-within:border-soft-gold transition-all mb-md max-w-2xl">
+        <span class="material-symbols-outlined text-on-surface-variant ml-3">search</span>
+        <input class="w-full bg-transparent border-none focus:ring-0 text-body-md font-body-md text-on-surface py-2 px-3 placeholder-on-surface-variant" id="search-input" type="text"/>
+      </div>
+
+      <!-- Mobile category chips duplicate target hidden, desktop chips row -->
+      <div class="hidden md:flex flex-wrap gap-sm mb-sm" id="desktop-category-chips"></div>
+
+      <!-- Split view -->
+      <div class="flex flex-col lg:flex-row gap-xl flex-grow pb-xxl relative">
+
+        <!-- List -->
+        <div class="w-full lg:w-1/2 xl:w-[44%] flex flex-col gap-md" id="list-view-container">
+          <div class="flex items-center justify-between">
+            <h2 class="font-headline-sm text-headline-sm text-high-contrast-white" id="list-title">All Places</h2>
+            <span class="text-soft-gold font-label-lg text-label-lg uppercase tracking-wider" id="location-count">34 Locations</span>
+          </div>
+          <div class="flex flex-col gap-md" id="attractions-list"></div>
+        </div>
+
+        <!-- Map -->
+        <div class="fixed inset-0 lg:static lg:w-1/2 xl:w-[56%] lg:h-[calc(100vh-260px)] lg:sticky lg:top-8 z-50 lg:z-10 bg-background lg:bg-transparent transition-transform duration-500 transform translate-y-full lg:translate-y-0 rounded-t-3xl lg:rounded-xl overflow-hidden shadow-2xl lg:shadow-none border-t lg:border border-outline-variant" id="map-container">
+          <div class="lg:hidden w-full h-12 bg-surface-container flex items-center justify-center cursor-pointer" id="close-map-mobile">
+            <div class="w-12 h-1.5 bg-outline rounded-full"></div>
+          </div>
+          <div class="w-full h-[calc(100%-3rem)] lg:h-full relative overflow-hidden border border-outline-variant">
+            <div class="w-full h-full" id="map"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="w-full py-lg glass-card rounded-xl mt-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-lg items-center px-lg">
+          <div class="flex flex-col gap-sm">
+            <span class="font-headline-sm text-headline-sm text-high-contrast-white">AD Heritage</span>
+            <p class="font-body-md text-sm text-on-surface-variant" id="footer-tag"></p>
+          </div>
+          <div class="flex flex-wrap gap-md md:justify-end">
+            <span class="text-sm text-on-surface-variant" id="footer-stats">34 · 6</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Mobile map FAB -->
+  <button class="lg:hidden fixed bottom-6 right-6 z-40 bg-secondary-container text-on-secondary-container w-14 h-14 rounded-full shadow-lg flex items-center justify-center fab-pulse border border-soft-gold/40" id="fab-map-toggle">
+    <span class="material-symbols-outlined text-[28px]">map</span>
+  </button>
+</main>
+
+<script src="data.js"></script>
+<script crossorigin="" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  let map, markers = {}, activeCategory = 'all', isMapVisibleMobile = false;
+
+  // Build sidebar + chip category lists from data.js
+  function buildCategoryUI() {
+    const sidebar = document.getElementById('sidebar-categories');
+    const desktopChips = document.getElementById('desktop-category-chips');
+    const mobileChips = document.getElementById('mobile-category-chips');
+
+    sidebar.querySelectorAll('.cat-generated').forEach(el => el.remove());
+    desktopChips.innerHTML = '';
+    mobileChips.innerHTML = '';
+
+    CATEGORIES.forEach(cat => {
+      const li = document.createElement('li');
+      li.className = 'cat-generated';
+      li.innerHTML = `<button class="cat-filter w-full flex items-center gap-md p-3 rounded-lg font-label-lg text-label-lg transition-all text-left text-on-surface-variant hover:bg-surface-container" data-cat="${cat.id}">
+          <span class="material-symbols-outlined">${cat.icon}</span> ${categoryLabel(cat.id)}
+        </button>`;
+      sidebar.appendChild(li);
+
+      [desktopChips, mobileChips].forEach(container => {
+        const chip = document.createElement('button');
+        chip.className = 'cat-filter chip flex-shrink-0 flex items-center gap-1 px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant text-sm font-label-lg';
+        chip.dataset.cat = cat.id;
+        chip.innerHTML = `<span class="material-symbols-outlined text-[16px]">${cat.icon}</span> ${categoryLabel(cat.id)}`;
+        container.appendChild(chip);
+      });
+    });
+
+    document.querySelectorAll('.cat-filter').forEach(btn => {
+      btn.addEventListener('click', () => setActiveCategory(btn.dataset.cat));
+    });
+  }
+
+  function setActiveCategory(catId) {
+    activeCategory = catId;
+    document.querySelectorAll('.cat-filter').forEach(btn => {
+      const isActive = btn.dataset.cat === catId;
+      btn.classList.toggle('active', isActive);
+      if (btn.closest('#sidebar-categories')) {
+        btn.classList.toggle('bg-secondary-container', isActive);
+        btn.classList.toggle('text-on-secondary-container', isActive);
+        btn.classList.toggle('text-on-surface-variant', !isActive);
+      }
+    });
+    const catLabel = catId === 'all' ? t('allPlaces') : categoryLabel(catId);
+    document.getElementById('list-title').textContent = catLabel;
+    renderList();
+  }
+
+  function getFilteredAttractions() {
+    const q = document.getElementById('search-input').value.trim().toLowerCase();
+    return ATTRACTIONS.filter(a => {
+      const catMatch = activeCategory === 'all' || a.category === activeCategory;
+      const name = tr(a, 'name').toLowerCase();
+      const desc = tr(a, 'description').toLowerCase();
+      const searchMatch = !q || name.includes(q) || desc.includes(q) || categoryLabel(a.category).toLowerCase().includes(q);
+      return catMatch && searchMatch;
+    });
+  }
+
+  function renderList() {
+    const list = getFilteredAttractions();
+    document.getElementById('location-count').textContent = `${list.length} ${list.length !== 1 ? t('locations') : t('location')}`;
+    const container = document.getElementById('attractions-list');
+    container.innerHTML = '';
+
+    if (list.length === 0) {
+      container.innerHTML = `<div class="glass-card rounded-xl p-lg text-center text-on-surface-variant">${t('noResults')}</div>`;
+    }
+
+    list.forEach(attr => {
+      const name = tr(attr, 'name'), desc = tr(attr, 'description'), price = tr(attr, 'price');
+      const card = document.createElement('a');
+      card.href = `attraction.html?id=${attr.id}`;
+      card.className = 'group glass-card rounded-xl overflow-hidden hover:border-soft-gold/50 transition-all flex flex-col sm:flex-row border border-outline-variant';
+      card.innerHTML = `
+        ${photoSlotHtml(attr, 'w-full sm:w-40 h-40 sm:h-auto flex-shrink-0')}
+        <div class="p-md flex flex-col flex-grow">
+          <div class="flex items-center gap-xs mb-1">
+            <span class="material-symbols-outlined text-[16px] text-soft-gold">${attr.icon}</span>
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">${categoryLabel(attr.category)}</span>
+          </div>
+          <h3 class="font-headline-sm text-headline-sm text-high-contrast-white group-hover:text-soft-gold transition-colors mb-1">${name}</h3>
+          <p class="font-body-md text-sm text-on-surface-variant flex-grow line-clamp-2">${desc}</p>
+          <div class="flex items-center justify-between mt-3 pt-3 border-t border-outline-variant">
+            <span class="text-xs text-on-surface-variant flex items-center gap-1">
+              <span class="material-symbols-outlined text-[14px]">payments</span> ${price}
+            </span>
+            <button onclick="event.preventDefault(); flyToLocation(${attr.lat}, ${attr.lng}, '${attr.id}')" class="text-soft-gold text-xs font-label-lg flex items-center gap-1 hover:underline">
+              <span class="material-symbols-outlined text-[16px]">my_location</span> ${t('mapBtn')}
+            </button>
+          </div>
+        </div>`;
+      container.appendChild(card);
+    });
+    mountPhotos(container);
+  }
+
+  function initMap() {
+    map = L.map('map', { zoomControl: false, scrollWheelZoom: true }).setView([24.46, 54.45], 10);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      subdomains: 'abcd', maxZoom: 19
+    }).addTo(map);
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+    addMarkers();
+    setTimeout(() => map.invalidateSize(), 150);
+    window.addEventListener('resize', () => { if (window.innerWidth >= 1024 || isMapVisibleMobile) map.invalidateSize(); });
+  }
+
+  function addMarkers() {
+    ATTRACTIONS.forEach(attr => {
+      const icon = L.divIcon({
+        className: 'custom-icon-wrapper',
+        html: `<div class="custom-map-marker w-9 h-9" id="marker-${attr.id}"><span class="material-symbols-outlined text-[18px]">${attr.icon}</span></div>`,
+        iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -18]
+      });
+      const marker = L.marker([attr.lat, attr.lng], { icon }).addTo(map);
+      marker.bindPopup(buildPopupHtml(attr));
+      markers[attr.id] = marker;
+      marker.on('click', () => highlightMarker(attr.id));
+    });
+  }
+
+  function buildPopupHtml(attr) {
+    return `<div class="p-2 min-w-[170px]">
+        <h4 class="font-label-lg text-sm font-bold mb-1">${tr(attr, 'name')}</h4>
+        <p class="text-xs text-on-surface-variant mb-2">${categoryLabel(attr.category)}</p>
+        <a href="attraction.html?id=${attr.id}" class="block w-full text-center bg-secondary-container text-on-secondary-container text-xs font-bold py-1.5 rounded">${t('detailsBtn')}</a>
+      </div>`;
+  }
+
+  function updateAllPopups() {
+    Object.entries(markers).forEach(([id, marker]) => {
+      marker.setPopupContent(buildPopupHtml(ATTRACTIONS_BY_ID[id]));
+    });
+  }
+
+  function flyToLocation(lat, lng, id) {
+    if (window.innerWidth < 1024 && !isMapVisibleMobile) toggleMobileMap(true);
+    setTimeout(() => {
+      map.flyTo([lat, lng], 14, { duration: 1.2 });
+      highlightMarker(id);
+      markers[id].openPopup();
+    }, window.innerWidth < 1024 ? 320 : 0);
+  }
+
+  function highlightMarker(id) {
+    document.querySelectorAll('.custom-map-marker').forEach(el => el.classList.remove('active'));
+    const el = document.getElementById(`marker-${id}`);
+    if (el) el.classList.add('active');
+  }
+
+  const mapContainer = document.getElementById('map-container');
+  function toggleMobileMap(forceShow = false) {
+    if (forceShow || !isMapVisibleMobile) {
+      mapContainer.classList.remove('translate-y-full');
+      isMapVisibleMobile = true;
+      setTimeout(() => map.invalidateSize(), 300);
+    } else {
+      mapContainer.classList.add('translate-y-full');
+      isMapVisibleMobile = false;
+    }
+  }
+  document.getElementById('fab-map-toggle').addEventListener('click', () => toggleMobileMap());
+  document.getElementById('fab-map-toggle-mobile-icon').addEventListener('click', () => toggleMobileMap());
+  document.getElementById('close-map-mobile').addEventListener('click', () => toggleMobileMap(false));
+  document.getElementById('side-nav-map-toggle').addEventListener('click', (e) => {
+    e.preventDefault();
+    if (window.innerWidth < 1024) toggleMobileMap(true);
+    else document.getElementById('main-content-scroll').scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  document.getElementById('search-input').addEventListener('input', renderList);
+
+  // --- Language: apply static text + wire the toggle(s) ---
+  function applyStaticText() {
+    document.getElementById('sidebar-tagline').textContent = t('tagline');
+    document.getElementById('sidebar-all-label').textContent = t('allPlaces');
+    document.getElementById('sidebar-map-label').textContent = t('fullMap');
+    document.getElementById('sidebar-note').textContent = t('sidebarNote');
+    document.getElementById('discover-title').textContent = t('discoverTitle');
+    document.getElementById('discover-subtitle').textContent = t('discoverSubtitle');
+    document.getElementById('search-input').placeholder = t('searchPlaceholder');
+    document.getElementById('footer-tag').textContent = t('footerTag');
+    document.getElementById('footer-stats').textContent = `34 ${t('footerStats')}`;
+  }
+
+  function syncLangToggleUI() {
+    const lang = getLang();
+    [['lang-indicator', 'lang-en', 'lang-pt'], ['lang-indicator-mobile', 'lang-en-mobile', 'lang-pt-mobile']].forEach(([indId, enId, ptId]) => {
+      const ind = document.getElementById(indId), en = document.getElementById(enId), pt = document.getElementById(ptId);
+      if (!ind) return;
+      ind.style.transform = lang === 'pt' ? 'translateX(100%)' : 'translateX(0)';
+      en.classList.toggle('text-on-secondary-container', lang === 'en');
+      en.classList.toggle('text-on-surface-variant', lang !== 'en');
+      pt.classList.toggle('text-on-secondary-container', lang === 'pt');
+      pt.classList.toggle('text-on-surface-variant', lang !== 'pt');
+    });
+  }
+
+  function switchLanguage(lang) {
+    setLang(lang);
+    syncLangToggleUI();
+    applyStaticText();
+    buildCategoryUI();
+    setActiveCategory(activeCategory);
+    updateAllPopups();
+  }
+
+  document.getElementById('lang-toggle').addEventListener('click', () => switchLanguage(getLang() === 'en' ? 'pt' : 'en'));
+  document.getElementById('lang-toggle-mobile').addEventListener('click', () => switchLanguage(getLang() === 'en' ? 'pt' : 'en'));
+
+  applyStaticText();
+  syncLangToggleUI();
+  buildCategoryUI();
+  setActiveCategory('all');
+  document.addEventListener('DOMContentLoaded', initMap);
+  initMap();
+</script>
+</body>
+</html>

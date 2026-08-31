@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title id="page-title">AD Heritage</title>
+
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=Noto+Serif:wght@500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="theme.js"></script>
+<script>tailwind.config = AD_THEME_CONFIG;</script>
+
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.1); }
+  .hero-gradient { background: linear-gradient(to bottom, rgba(2,6,23,0) 0%, rgba(2,6,23,0.85) 60%, rgba(2,6,23,1) 100%); z-index: 5; }
+  .card-image-gradient { background: linear-gradient(to top, rgba(2,6,23,0.9) 0%, rgba(2,6,23,0) 100%); z-index: 5; }
+  .leaflet-container { background-color: #051424 !important; }
+  .leaflet-tile-pane { filter: invert(100%) hue-rotate(180deg) brightness(90%) contrast(90%) saturate(60%); }
+  .mini-marker { background-color: #d97707; border-radius: 9999px; width: 18px; height: 18px; border: 3px solid #fde68a; box-shadow: 0 0 0 4px rgba(217,119,7,0.25); }
+</style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col">
+
+<!-- Top nav -->
+<nav class="fixed top-0 w-full z-50 bg-surface-container-lowest/85 backdrop-blur-md">
+  <div class="flex justify-between items-center w-full px-lg md:px-xxl max-w-[1440px] mx-auto h-20">
+    <a class="flex items-center gap-sm text-on-surface-variant hover:text-soft-gold transition-colors" href="index.html">
+      <span class="material-symbols-outlined">arrow_back</span>
+      <span class="font-label-lg text-label-lg hidden sm:inline" id="back-label">Back to Discover</span>
+    </a>
+    <a class="font-headline-sm text-headline-sm font-bold text-high-contrast-white tracking-tight" href="index.html">AD Heritage</a>
+    <div class="flex items-center gap-sm">
+      <div class="flex items-center bg-surface-container rounded-full p-1 relative cursor-pointer border border-outline-variant" id="lang-toggle">
+        <div class="absolute w-1/2 h-full bg-secondary-container rounded-full left-0 transition-transform duration-300 ease-in-out" id="lang-indicator"></div>
+        <span class="relative z-10 px-3 py-1 text-xs font-semibold transition-colors" id="lang-en">EN</span>
+        <span class="relative z-10 px-3 py-1 text-xs font-semibold transition-colors" id="lang-pt">PT</span>
+      </div>
+      <button id="save-btn" class="flex items-center gap-xs text-on-surface-variant hover:text-soft-gold transition-colors p-2 rounded-full">
+        <span class="material-symbols-outlined" id="save-icon">bookmark_border</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<main class="flex-grow pt-20">
+  <!-- Hero -->
+  <section class="relative h-[60vh] min-h-[420px] w-full flex items-end" id="hero-section">
+    <div class="absolute inset-0 z-0 photo-slot" id="hero-image-container" data-attr-id="">
+      <div class="absolute inset-0 flex items-center justify-center" id="hero-placeholder"></div>
+      <div class="absolute inset-0 hero-gradient"></div>
+    </div>
+    <div class="relative z-10 w-full max-w-[1440px] mx-auto px-lg md:px-xxl pb-xl flex flex-col md:flex-row justify-between items-end gap-lg">
+      <div class="max-w-3xl">
+        <span id="hero-category" class="inline-block bg-secondary-container/20 text-secondary-fixed border border-secondary-container/50 px-md py-xs rounded-full font-label-sm text-label-sm uppercase tracking-widest backdrop-blur-sm mb-md"></span>
+        <h1 id="hero-title" class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-high-contrast-white mb-md"></h1>
+        <p id="hero-desc" class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl"></p>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-md w-full md:w-auto">
+        <a id="directions-btn" target="_blank" title="Get Directions" aria-label="Get Directions" class="bg-secondary-container text-on-secondary-container hover:brightness-110 w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-[0_0_15px_rgba(217,119,7,0.15)]">
+          <span class="material-symbols-outlined text-2xl">directions</span><span id="directions-label" class="sr-only">Get Directions</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content grid -->
+  <div class="max-w-[1440px] mx-auto px-lg md:px-xxl py-xxl">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+
+      <!-- Main column -->
+      <div class="lg:col-span-8 flex flex-col gap-xxl">
+        <section>
+          <h2 class="font-headline-md text-headline-md text-high-contrast-white mb-lg" id="about-title">About the Experience</h2>
+          <div class="max-w-none text-on-surface-variant font-body-lg text-body-lg space-y-md">
+            <p id="about-desc"></p>
+            <p id="about-history"></p>
+          </div>
+        </section>
+
+        <section class="glass-card rounded-xl p-lg md:p-xl relative overflow-hidden group" id="fun-facts-section">
+          <div class="absolute top-0 right-0 p-lg opacity-20">
+            <span class="material-symbols-outlined text-6xl text-soft-gold">auto_awesome</span>
+          </div>
+          <div class="relative z-10">
+            <span class="text-soft-gold font-label-sm text-label-sm uppercase tracking-widest mb-sm block" id="fun-facts-title">Fun Facts</span>
+            <ul id="fun-facts-list" class="font-body-md text-body-md text-on-surface-variant space-y-2 max-w-xl list-disc list-inside"></ul>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="font-headline-md text-headline-md text-high-contrast-white mb-lg" id="on-map-title">On the Map</h2>
+          <div class="glass-card rounded-xl overflow-hidden h-72">
+            <div id="mini-map" class="w-full h-full"></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Side panel -->
+      <div class="lg:col-span-4 mt-xxl lg:mt-0">
+        <div class="sticky top-32 glass-card rounded-xl p-lg flex flex-col gap-lg">
+          <div>
+            <h3 class="font-headline-sm text-headline-sm text-high-contrast-white mb-md" id="key-details-title">Key Details</h3>
+            <ul class="space-y-md">
+              <li class="flex items-start gap-md pb-md border-b border-surface-variant">
+                <span class="material-symbols-outlined text-soft-gold mt-xs">schedule</span>
+                <div><span class="block font-label-lg text-label-lg text-high-contrast-white mb-xs" id="hours-label">Visiting Hours</span>
+                  <span class="block font-body-md text-body-md text-on-surface-variant" id="detail-hours"></span></div>
+              </li>
+              <li class="flex items-start gap-md pb-md border-b border-surface-variant">
+                <span class="material-symbols-outlined text-soft-gold mt-xs">payments</span>
+                <div><span class="block font-label-lg text-label-lg text-high-contrast-white mb-xs" id="price-label">Price</span>
+                  <span class="block font-body-md text-body-md text-on-surface-variant" id="detail-price"></span></div>
+              </li>
+              <li class="flex items-start gap-md pb-md border-b border-surface-variant">
+                <span class="material-symbols-outlined text-soft-gold mt-xs">ac_unit</span>
+                <div><span class="block font-label-lg text-label-lg text-high-contrast-white mb-xs" id="climate-label">Climate Note</span>
+                  <span class="block font-body-md text-body-md text-on-surface-variant" id="detail-climate"></span></div>
+              </li>
+              <li class="flex items-start gap-md">
+                <span class="material-symbols-outlined text-soft-gold mt-xs">wb_twilight</span>
+                <div><span class="block font-label-lg text-label-lg text-high-contrast-white mb-xs" id="besttime-label">Best Time to Visit</span>
+                  <span class="block font-body-md text-body-md text-on-surface-variant" id="detail-besttime"></span></div>
+              </li>
+            </ul>
+          </div>
+          <p class="text-xs text-on-surface-variant flex items-start gap-xs">
+            <span class="material-symbols-outlined text-[16px] mt-[2px]">info</span>
+            <span id="hours-note">Hours can change seasonally — worth a quick check before you go.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nearby -->
+  <section class="bg-surface-container-lowest py-xxl border-t border-outline-variant/30">
+    <div class="max-w-[1440px] mx-auto px-lg md:px-xxl">
+      <h2 class="font-headline-md text-headline-md text-high-contrast-white mb-lg" id="nearby-title">Nearby Experiences</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-md" id="nearby-list"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="w-full py-xl border-t border-outline-variant/30 bg-surface-container-lowest text-on-surface-variant font-body-md text-body-md">
+  <div class="max-w-[1440px] mx-auto px-lg md:px-xxl grid grid-cols-1 md:grid-cols-2 gap-lg items-center">
+    <div class="flex flex-col gap-sm">
+      <span class="font-headline-sm text-headline-sm text-high-contrast-white">AD Heritage</span>
+      <p id="footer-tag"></p>
+    </div>
+    <div class="md:text-right">
+      <a class="text-soft-gold hover:underline" href="index.html" id="footer-back-link">← Back to all attractions</a>
+    </div>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script crossorigin="" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const attr = ATTRACTIONS_BY_ID[params.get('id')] || ATTRACTIONS[0];
+  let miniMap; // created once, content re-rendered on language switch
+
+  function renderContent() {
+    const name = tr(attr, 'name');
+    document.getElementById('page-title').textContent = `${name} — AD Heritage`;
+    document.getElementById('hero-category').textContent = categoryLabel(attr.category);
+    document.getElementById('hero-title').textContent = name;
+    document.getElementById('hero-desc').textContent = tr(attr, 'description');
+    document.getElementById('directions-btn').href = `https://www.google.com/maps/dir/?api=1&destination=${attr.lat},${attr.lng}`;
+    document.getElementById('about-desc').textContent = tr(attr, 'description');
+    document.getElementById('about-history').textContent = tr(attr, 'history');
+    document.getElementById('detail-hours').textContent = tr(attr, 'hours');
+    document.getElementById('detail-price').textContent = tr(attr, 'price');
+    document.getElementById('detail-climate').textContent = tr(attr, 'climateNote');
+    document.getElementById('detail-besttime').textContent = tr(attr, 'bestTime');
+
+    // Static labels
+    document.getElementById('back-label').textContent = t('backToDiscover');
+    document.getElementById('directions-label').textContent = t('getDirections');
+    document.getElementById('directions-btn').title = t('getDirections');
+    document.getElementById('directions-btn').setAttribute('aria-label', t('getDirections'));
+    document.getElementById('about-title').textContent = t('aboutTitle');
+    document.getElementById('fun-facts-title').textContent = t('funFactsTitle');
+    document.getElementById('on-map-title').textContent = t('onMapTitle');
+    document.getElementById('key-details-title').textContent = t('keyDetailsTitle');
+    document.getElementById('hours-label').textContent = t('hoursLabel');
+    document.getElementById('price-label').textContent = t('priceLabel');
+    document.getElementById('climate-label').textContent = t('climateLabel');
+    document.getElementById('besttime-label').textContent = t('bestTimeLabel');
+    document.getElementById('hours-note').textContent = t('hoursNote');
+    document.getElementById('nearby-title').textContent = t('nearbyTitle');
+    document.getElementById('footer-tag').textContent = t('footerTag');
+    document.getElementById('footer-back-link').textContent = t('footerBack');
+
+    // Fun facts
+    const facts = tr(attr, 'funFacts') || [];
+    const factsList = document.getElementById('fun-facts-list');
+    factsList.innerHTML = '';
+    facts.forEach(f => {
+      const li = document.createElement('li');
+      li.textContent = f;
+      factsList.appendChild(li);
+    });
+    document.getElementById('fun-facts-section').style.display = facts.length ? '' : 'none';
+
+    // Nearby cards
+    const nearbyContainer = document.getElementById('nearby-list');
+    nearbyContainer.innerHTML = '';
+    getNearby(attr, 3).forEach(n => {
+      const card = document.createElement('a');
+      card.href = `attraction.html?id=${n.id}`;
+      card.className = 'glass-card rounded-xl overflow-hidden group flex flex-col hover:border-soft-gold/50 transition-colors';
+      card.innerHTML = `
+        ${photoSlotHtml(n, 'h-40')}
+        <div class="p-md flex-grow flex flex-col justify-between">
+          <div>
+            <span class="text-soft-gold font-label-sm text-label-sm uppercase tracking-widest mb-xs block">${categoryLabel(n.category)}</span>
+            <h3 class="font-headline-sm text-headline-sm text-high-contrast-white mb-sm group-hover:text-soft-gold transition-colors">${tr(n, 'name')}</h3>
+          </div>
+          <div class="flex items-center gap-xs text-on-surface-variant mt-md">
+            <span class="material-symbols-outlined text-sm">explore</span>
+            <span class="font-label-sm text-label-sm">${t('exploreBtn')}</span>
+          </div>
+        </div>`;
+      nearbyContainer.appendChild(card);
+    });
+    // Card image slots use plain gradient (no card-image-gradient overlay needed,
+    // since photoSlotHtml already centers the icon) — add the fade-to-dark overlay
+    // for legibility once, then mount photos on top.
+    nearbyContainer.querySelectorAll('.photo-slot').forEach(slot => {
+      const overlay = document.createElement('div');
+      overlay.className = 'absolute inset-0 card-image-gradient pointer-events-none';
+      slot.appendChild(overlay);
+    });
+    mountPhotos(nearbyContainer);
+  }
+
+  // Hero photo: placeholder renders immediately, real photo (if present) fades in
+  document.getElementById('hero-image-container').dataset.attrId = attr.id;
+  const heroPlaceholder = document.getElementById('hero-placeholder');
+  heroPlaceholder.style.cssText += placeholderStyle(attr.category);
+  heroPlaceholder.innerHTML = `<span class="material-symbols-outlined text-white/10" style="font-size:220px">${attr.icon}</span>`;
+
+  function initMiniMap() {
+    miniMap = L.map('mini-map', { zoomControl: false, dragging: true, scrollWheelZoom: false }).setView([attr.lat, attr.lng], 13);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap contributors', subdomains: 'abcd', maxZoom: 19
+    }).addTo(miniMap);
+    L.marker([attr.lat, attr.lng], {
+      icon: L.divIcon({ className: '', html: '<div class="mini-marker"></div>', iconSize: [18, 18], iconAnchor: [9, 9] })
+    }).addTo(miniMap);
+    setTimeout(() => miniMap.invalidateSize(), 200);
+  }
+
+  // Save / favorite (persisted locally so it survives between drives)
+  const saveKey = `ad-heritage-saved-${attr.id}`;
+  const saveIcon = document.getElementById('save-icon');
+  function refreshSaveIcon() {
+    saveIcon.textContent = localStorage.getItem(saveKey) ? 'bookmark' : 'bookmark_border';
+  }
+  document.getElementById('save-btn').addEventListener('click', () => {
+    if (localStorage.getItem(saveKey)) localStorage.removeItem(saveKey);
+    else localStorage.setItem(saveKey, '1');
+    refreshSaveIcon();
+  });
+
+  // --- Language toggle ---
+  function syncLangToggleUI() {
+    const lang = getLang();
+    const ind = document.getElementById('lang-indicator'), en = document.getElementById('lang-en'), pt = document.getElementById('lang-pt');
+    ind.style.transform = lang === 'pt' ? 'translateX(100%)' : 'translateX(0)';
+    en.classList.toggle('text-on-secondary-container', lang === 'en');
+    en.classList.toggle('text-on-surface-variant', lang !== 'en');
+    pt.classList.toggle('text-on-secondary-container', lang === 'pt');
+    pt.classList.toggle('text-on-surface-variant', lang !== 'pt');
+  }
+  document.getElementById('lang-toggle').addEventListener('click', () => {
+    setLang(getLang() === 'en' ? 'pt' : 'en');
+    syncLangToggleUI();
+    renderContent();
+  });
+
+  refreshSaveIcon();
+  syncLangToggleUI();
+  renderContent();
+  mountPhotos(document.getElementById('hero-image-container'));
+  initMiniMap();
+</script>
+</body>
+</html>
