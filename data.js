@@ -1,4 +1,4 @@
-// Abu Dhabi Family Explorer — attraction dataset (bilingual: EN + PT)
+// UAE Explorer by Stein — attraction dataset (bilingual: EN + PT)
 // Each attraction has language-neutral fields (id, category, icon, lat, lng)
 // plus an `en` and `pt` block with all display text. UI strings live in
 // UI_STRINGS below. Both pages read the current language from
@@ -19,16 +19,16 @@ const CATEGORIES = [
 
 const UI_STRINGS = {
   en: {
-    siteName: 'AD Heritage', tagline: 'Modern Heritage',
-    discoverTitle: 'Discover Abu Dhabi',
+    siteName: 'UAE Explorer', tagline: 'by Stein',
+    discoverTitle: 'Discover the UAE',
     discoverSubtitle: "Every stop on your family's road trip — hours, directions, history, and fun facts for the road.",
     searchPlaceholder: 'Search attractions, e.g. mosque, Ferrari, mangrove...',
     allPlaces: 'All Places', fullMap: 'Full Map',
-    sidebarNote: '34 curated spots across Abu Dhabi — pick a place, get directions, and go.',
+    sidebarNote: 'Curated spots across the UAE — pick a place, get directions, and go.',
     locations: 'Locations', location: 'Location',
     noResults: 'No attractions match your search.',
     mapBtn: 'Map', detailsBtn: 'View Details', exploreBtn: 'Explore',
-    footerTag: 'A family road-trip guide to Abu Dhabi. Built for the tablet in your car.',
+    footerTag: 'A family & friends road-trip guide to the UAE. Built for the tablet in your car.',
     footerStats: 'attractions · 6 categories',
     backToDiscover: 'Back to Discover',
     getDirections: 'Get Directions',
@@ -40,18 +40,21 @@ const UI_STRINGS = {
     hoursNote: 'Hours can change seasonally — worth a quick check before you go.',
     nearbyTitle: 'Nearby Experiences',
     footerBack: '← Back to all attractions',
+    galleryTitle: 'Visual Journey',
+    priceAll: 'Price: All', priceFree: 'Free', pricePaid: 'Paid', priceVaries: 'Varies',
+    settingAll: 'Setting: All', settingIndoor: 'Indoor', settingOutdoor: 'Outdoor', settingMixed: 'Mixed',
   },
   pt: {
-    siteName: 'AD Heritage', tagline: 'Patrimônio Moderno',
-    discoverTitle: 'Descubra Abu Dhabi',
+    siteName: 'UAE Explorer', tagline: 'por Stein',
+    discoverTitle: 'Descubra os Emirados',
     discoverSubtitle: 'Cada parada da viagem em família — horários, direções, história e curiosidades para o caminho.',
     searchPlaceholder: 'Buscar atrações, ex: mesquita, Ferrari, mangue...',
     allPlaces: 'Todos os Lugares', fullMap: 'Mapa Completo',
-    sidebarNote: '34 lugares selecionados em Abu Dhabi — escolha um destino, peça direções e vá.',
+    sidebarNote: 'Lugares selecionados por todos os Emirados — escolha um destino, peça direções e vá.',
     locations: 'Locais', location: 'Local',
     noResults: 'Nenhuma atração corresponde à sua busca.',
     mapBtn: 'Mapa', detailsBtn: 'Ver Detalhes', exploreBtn: 'Explorar',
-    footerTag: 'Um guia de viagem em família por Abu Dhabi. Feito para o tablet no carro.',
+    footerTag: 'Um guia de viagem em família e amigos pelos Emirados. Feito para o tablet no carro.',
     footerStats: 'atrações · 6 categorias',
     backToDiscover: 'Voltar para Descobrir',
     getDirections: 'Obter Direções',
@@ -63,15 +66,19 @@ const UI_STRINGS = {
     hoursNote: 'Os horários podem mudar conforme a época — vale a pena confirmar antes de ir.',
     nearbyTitle: 'Experiências Próximas',
     footerBack: '← Voltar para todas as atrações',
+    galleryTitle: 'Galeria de Fotos',
+    priceAll: 'Preço: Todos', priceFree: 'Gratuito', pricePaid: 'Pago', priceVaries: 'Varia',
+    settingAll: 'Ambiente: Todos', settingIndoor: 'Coberto', settingOutdoor: 'Ao ar livre', settingMixed: 'Misto',
   }
 };
 
 const ATTRACTIONS = [
   // ---------- Culture & Heritage ----------
   {
-    id: 'grand-mosque', category: 'heritage', icon: 'mosque', lat: 24.4128, lng: 54.4750,
+    id: 'grand-mosque', category: 'heritage', icon: 'mosque', lat: 24.4128334, lng: 54.4749754,
     address: 'Sheikh Rashid Bin Saeed St, Abu Dhabi', image: "images/grand-mosque.jpg", 
-    souce:'https://unsplash.com/photos/brown-mansion-with-lights-during-nighttime-p0MGf8YvGRg?utm_source=unsplash&utm_medium=referral&utm_content=creditShareLink',
+    source: 'https://unsplash.com/photos/brown-mansion-with-lights-during-nighttime-p0MGf8YvGRg?utm_source=unsplash&utm_medium=referral&utm_content=creditShareLink',
+    priceTier: 'free', setting: 'mixed',
     en: {
       name: 'Sheikh Zayed Grand Mosque',
       hours: 'Sat–Thu 9:00 AM–10:00 PM · Fri 9:00 AM–12:00 PM & 3:00–10:00 PM',
@@ -98,8 +105,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'qasr-al-watan', category: 'heritage', icon: 'castle', lat: 24.4335, lng: 54.3098,
+    id: 'qasr-al-watan', category: 'heritage', icon: 'castle', lat: 24.4594306, lng: 54.3076336,
     address: 'Ras Al Akhdar, Abu Dhabi', image: null,
+    priceTier: 'paid', setting: 'indoor',
     en: {
       name: 'Qasr Al Watan',
       hours: 'Daily 10:00 AM–8:00 PM', price: 'From AED 60', climateNote: 'Mostly indoor', bestTime: 'Evening, for the light show',
@@ -124,8 +132,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'qasr-al-hosn', category: 'heritage', icon: 'fort', lat: 24.4764, lng: 54.3705,
+    id: 'qasr-al-hosn', category: 'heritage', icon: 'fort', lat: 24.482237, lng: 54.354723,
     address: 'Corniche Rd, near the Cultural Foundation, Abu Dhabi', image: null,
+    priceTier: 'free', setting: 'mixed',
     en: {
       name: 'Qasr Al Hosn',
       hours: 'Sat–Thu 9:00 AM–7:00 PM (verify Friday hours)', price: 'Free entry', climateNote: 'Indoor & outdoor', bestTime: 'Late afternoon',
@@ -142,8 +151,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'heritage-village', category: 'heritage', icon: 'holiday_village', lat: 24.4738, lng: 54.3372,
+    id: 'heritage-village', category: 'heritage', icon: 'holiday_village', lat: 24.4766604, lng: 54.3309894,
     address: 'Al Marina St, Breakwater, Abu Dhabi', image: null,
+    priceTier: 'free', setting: 'outdoor',
     en: {
       name: 'Abu Dhabi Heritage Village',
       hours: 'Daily approx. 9:00 AM–5:00 PM (varies by season)', price: 'Free entry', climateNote: 'Mostly outdoor', bestTime: 'Morning',
@@ -160,8 +170,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'founders-memorial', category: 'heritage', icon: 'auto_awesome', lat: 24.4548, lng: 54.3379,
+    id: 'founders-memorial', category: 'heritage', icon: 'auto_awesome', lat: 24.4630481, lng: 54.3224097,
     address: 'Al Bateen, Abu Dhabi', image: null,
+    priceTier: 'free', setting: 'outdoor',
     en: {
       name: "Founder's Memorial",
       hours: 'Daily 9:00 AM–7:00 PM', price: 'Free entry', climateNote: 'Mostly outdoor', bestTime: 'Sunset',
@@ -178,8 +189,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'zayed-national-museum', category: 'heritage', icon: 'vrpano', lat: 24.5347, lng: 54.4014,
+    id: 'zayed-national-museum', category: 'heritage', icon: 'vrpano', lat: 24.5334816, lng: 54.4065875,
     address: 'Saadiyat Cultural District, Saadiyat Island', image: null,
+    priceTier: 'paid', setting: 'indoor',
     en: {
       name: 'Zayed National Museum',
       hours: 'Newly opened (Dec 2025) — check official site for current hours', price: 'From AED 50', climateNote: 'Fully indoor', bestTime: 'Mid-morning or late afternoon',
@@ -196,8 +208,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'house-of-artisans', category: 'heritage', icon: 'palette', lat: 24.4779, lng: 54.3702,
+    id: 'house-of-artisans', category: 'heritage', icon: 'palette', lat: 24.4814291, lng: 54.3551795,
     address: 'Near Qasr Al Hosn, Abu Dhabi', image: null,
+    priceTier: 'free', setting: 'indoor',
     en: {
       name: 'House of Artisans',
       hours: 'Sat–Thu 9:00 AM–7:00 PM', price: 'Free entry', climateNote: 'Fully indoor', bestTime: 'Any time',
@@ -214,8 +227,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'al-ain-oasis', category: 'heritage', icon: 'forest', lat: 24.2247, lng: 55.7455,
+    id: 'al-ain-oasis', category: 'heritage', icon: 'forest', lat: 24.2169951, lng: 55.7703457,
     address: 'Al Ain, ~90 min drive from Abu Dhabi city', image: null,
+    priceTier: 'free', setting: 'outdoor',
     en: {
       name: 'Al Ain Oasis',
       hours: 'Daily approx. 9:00 AM–7:30 PM', price: 'Free entry', climateNote: 'Fully outdoor, shaded', bestTime: 'Morning',
@@ -232,8 +246,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'al-jahili-fort', category: 'heritage', icon: 'fort', lat: 24.2308, lng: 55.7519,
+    id: 'al-jahili-fort', category: 'heritage', icon: 'fort', lat: 24.2161572, lng: 55.7527166,
     address: 'Al Ain', image: null,
+    priceTier: 'free', setting: 'mixed',
     en: {
       name: 'Al Jahili Fort',
       hours: 'Sat–Thu approx. 9:00 AM–5:00 PM', price: 'Free entry', climateNote: 'Indoor & outdoor', bestTime: 'Late afternoon',
@@ -252,8 +267,9 @@ const ATTRACTIONS = [
 
   // ---------- Art & Museums ----------
   {
-    id: 'louvre-abu-dhabi', category: 'art-museums', icon: 'museum', lat: 24.5336, lng: 54.3985,
+    id: 'louvre-abu-dhabi', category: 'art-museums', icon: 'museum', lat: 24.5336954, lng: 54.3981368,
     address: 'Saadiyat Cultural District, Saadiyat Island', image: null,
+    priceTier: 'paid', setting: 'indoor',
     en: {
       name: 'Louvre Abu Dhabi',
       hours: 'Tue–Sun 10:00 AM–8:30 PM (galleries close earlier weekdays) · Closed Mon', price: 'From AED 63', climateNote: 'Fully indoor / shaded', bestTime: 'First hour after opening',
@@ -270,8 +286,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'manarat-al-saadiyat', category: 'art-museums', icon: 'palette', lat: 24.5389, lng: 54.4067,
+    id: 'manarat-al-saadiyat', category: 'art-museums', icon: 'palette', lat: 24.5342114, lng: 54.4189099,
     address: 'Saadiyat Cultural District', image: null,
+    priceTier: 'free', setting: 'indoor',
     en: {
       name: 'Manarat Al Saadiyat',
       hours: 'Daily approx. 9:00 AM–8:00 PM', price: 'Free entry (most exhibits)', climateNote: 'Fully indoor', bestTime: 'Any time',
@@ -288,8 +305,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'natural-history-museum', category: 'art-museums', icon: 'science', lat: 24.5310, lng: 54.4000,
+    id: 'natural-history-museum', category: 'art-museums', icon: 'science', lat: 24.5286191, lng: 54.403345,
     address: 'Saadiyat Cultural District, Saadiyat Island', image: null,
+    priceTier: 'varies', setting: 'indoor',
     en: {
       name: 'Natural History Museum Abu Dhabi',
       hours: 'Recently opened — check official site', price: 'Check official site', climateNote: 'Fully indoor', bestTime: 'Mid-morning',
@@ -306,8 +324,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'teamlab-phenomena', category: 'art-museums', icon: 'auto_awesome', lat: 24.5325, lng: 54.4023,
+    id: 'teamlab-phenomena', category: 'art-museums', icon: 'auto_awesome', lat: 24.5274599, lng: 54.4050985,
     address: 'Saadiyat Cultural District', image: null,
+    priceTier: 'varies', setting: 'indoor',
     en: {
       name: 'teamLab Phenomena Abu Dhabi',
       hours: 'Ticketed, timed entry — check official site', price: 'Check official site', climateNote: 'Fully indoor', bestTime: 'Any time',
@@ -326,8 +345,9 @@ const ATTRACTIONS = [
 
   // ---------- Theme Parks & Entertainment ----------
   {
-    id: 'ferrari-world', category: 'theme-parks', icon: 'sports_motorsports', lat: 24.4832, lng: 54.6072,
+    id: 'ferrari-world', category: 'theme-parks', icon: 'sports_motorsports', lat: 24.4843883, lng: 54.607704,
     address: 'Yas Island, Abu Dhabi', image: null,
+    priceTier: 'paid', setting: 'indoor',
     en: {
       name: 'Ferrari World Yas Island',
       hours: 'Varies seasonally, generally ~12:00–8:00 PM — confirm before visiting', price: 'From AED 345', climateNote: 'Mostly indoor', bestTime: 'Mid-afternoon',
@@ -344,8 +364,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'yas-waterworld', category: 'theme-parks', icon: 'pool', lat: 24.4881, lng: 54.5997,
+    id: 'yas-waterworld', category: 'theme-parks', icon: 'pool', lat: 24.487617, lng: 54.599647,
     address: 'Yas Island, Abu Dhabi', image: null,
+    priceTier: 'paid', setting: 'outdoor',
     en: {
       name: 'Yas Waterworld',
       hours: 'Typically 10:00 AM–7:00/8:00 PM depending on season', price: 'From AED 295', climateNote: 'Outdoor waterpark', bestTime: 'Morning, before it gets crowded',
@@ -362,8 +383,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'warner-bros-world', category: 'theme-parks', icon: 'attractions', lat: 24.4909, lng: 54.6067,
+    id: 'warner-bros-world', category: 'theme-parks', icon: 'attractions', lat: 24.4909273, lng: 54.5992359,
     address: 'Yas Island, Abu Dhabi', image: null,
+    priceTier: 'paid', setting: 'indoor',
     en: {
       name: 'Warner Bros. World Abu Dhabi',
       hours: 'Typically 11:00 AM–8:00 PM — confirm before visiting', price: 'From AED 345', climateNote: 'Fully indoor', bestTime: 'Any time — fully air-conditioned',
@@ -380,8 +402,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'seaworld-abu-dhabi', category: 'theme-parks', icon: 'water', lat: 24.4767, lng: 54.5978,
+    id: 'seaworld-abu-dhabi', category: 'theme-parks', icon: 'water', lat: 24.4858436, lng: 54.6188199,
     address: 'Yas Island, Abu Dhabi', image: null,
+    priceTier: 'varies', setting: 'indoor',
     en: {
       name: 'SeaWorld Yas Island, Abu Dhabi',
       hours: 'Check official site — newer attraction', price: 'Check official site', climateNote: 'Mostly indoor', bestTime: 'Mid-morning',
@@ -398,8 +421,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'yas-marina-circuit', category: 'theme-parks', icon: 'flag', lat: 24.4672, lng: 54.6031,
+    id: 'yas-marina-circuit', category: 'theme-parks', icon: 'flag', lat: 24.4699413, lng: 54.6055067,
     address: 'Yas Island, Abu Dhabi', image: null,
+    priceTier: 'varies', setting: 'outdoor',
     en: {
       name: 'Yas Marina Circuit',
       hours: 'Track tours/go-karting most days; F1 Grand Prix in Nov/Dec', price: 'Varies by activity', climateNote: 'Outdoor', bestTime: 'Evening',
@@ -416,8 +440,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'clymb', category: 'theme-parks', icon: 'paragliding', lat: 24.4864, lng: 54.6014,
+    id: 'clymb', category: 'theme-parks', icon: 'paragliding', lat: 24.4858941, lng: 54.6070251,
     address: 'Yas Island, Abu Dhabi', image: null,
+    priceTier: 'varies', setting: 'indoor',
     en: {
       name: 'CLYMB Abu Dhabi',
       hours: 'Booking-based sessions — check official site', price: 'Varies by activity', climateNote: 'Fully indoor', bestTime: 'Any time',
@@ -436,8 +461,9 @@ const ATTRACTIONS = [
 
   // ---------- Nature & Outdoors ----------
   {
-    id: 'corniche-beach', category: 'nature', icon: 'beach_access', lat: 24.4764, lng: 54.3300,
+    id: 'corniche-beach', category: 'nature', icon: 'beach_access', lat: 24.4719602, lng: 54.3374924,
     address: 'Corniche Rd, Abu Dhabi', image: null,
+    priceTier: 'free', setting: 'outdoor',
     en: {
       name: 'Corniche Beach & Promenade',
       hours: 'Beach ~6:00 AM–10:00 PM · Promenade 24/7', price: 'Free (small fee at some beach sections)', climateNote: 'Fully outdoor', bestTime: 'Sunset',
@@ -454,8 +480,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'jubail-mangrove-park', category: 'nature', icon: 'forest', lat: 24.5252, lng: 54.4232,
+    id: 'jubail-mangrove-park', category: 'nature', icon: 'forest', lat: 24.5451825, lng: 54.4854061,
     address: 'Jubail Island, Abu Dhabi', image: null,
+    priceTier: 'paid', setting: 'outdoor',
     en: {
       name: 'Jubail Mangrove Park',
       hours: 'Daily approx. 8:00 AM–6:00/7:00 PM', price: 'Small entry fee', climateNote: 'Fully outdoor', bestTime: 'Early morning',
@@ -472,8 +499,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'eastern-mangroves', category: 'nature', icon: 'kayaking', lat: 24.4692, lng: 54.3868,
+    id: 'eastern-mangroves', category: 'nature', icon: 'kayaking', lat: 24.4567242, lng: 54.4251332,
     address: 'Between Al Bateen and Al Mushrif, Abu Dhabi', image: null,
+    priceTier: 'varies', setting: 'outdoor',
     en: {
       name: 'Eastern Mangrove National Park',
       hours: 'Kayak/paddleboard tours daily, book ahead', price: 'Varies by tour', climateNote: 'Fully outdoor', bestTime: 'Early morning',
@@ -490,8 +518,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'hudayriyat-island', category: 'nature', icon: 'surfing', lat: 24.4342, lng: 54.4364,
+    id: 'hudayriyat-island', category: 'nature', icon: 'surfing', lat: 24.4251255, lng: 54.3412497,
     address: 'Hudayriyat Island, Abu Dhabi', image: null,
+    priceTier: 'free', setting: 'outdoor',
     en: {
       name: 'Hudayriyat Island',
       hours: 'Outdoor areas 24/7; specific venues have set hours', price: 'Free (activities extra)', climateNote: 'Fully outdoor', bestTime: 'Morning or evening',
@@ -508,8 +537,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'al-wathba-wetland', category: 'nature', icon: 'flutter_dash', lat: 24.2528, lng: 54.6072,
+    id: 'al-wathba-wetland', category: 'nature', icon: 'flutter_dash', lat: 24.2543029, lng: 54.6108662,
     address: 'Al Wathba, ~40 min from central Abu Dhabi', image: null,
+    priceTier: 'paid', setting: 'outdoor',
     en: {
       name: 'Al Wathba Wetland Reserve',
       hours: 'Sat–Thu approx. 9:00 AM–5:00 PM (verify seasonal closures)', price: 'Small entry fee', climateNote: 'Fully outdoor', bestTime: 'Cooler months, early morning',
@@ -526,8 +556,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'umm-al-emarat-park', category: 'nature', icon: 'park', lat: 24.4489, lng: 54.3722,
+    id: 'umm-al-emarat-park', category: 'nature', icon: 'park', lat: 24.4531769, lng: 54.3808866,
     address: 'Al Karama St, Abu Dhabi', image: null,
+    priceTier: 'paid', setting: 'outdoor',
     en: {
       name: 'Umm Al Emarat Park',
       hours: 'Daily approx. 8:00 AM–10:00 PM', price: 'Small entry fee', climateNote: 'Fully outdoor', bestTime: 'Late afternoon',
@@ -544,8 +575,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'sir-bani-yas', category: 'nature', icon: 'pets', lat: 24.3167, lng: 52.5833,
+    id: 'sir-bani-yas', category: 'nature', icon: 'pets', lat: 24.311364, lng: 52.5959129,
     address: 'Western Region, ~2.5–3 hr drive + ferry', image: null,
+    priceTier: 'varies', setting: 'outdoor',
     en: {
       name: 'Sir Bani Yas Island',
       hours: 'Best as an overnight trip; safaris run on set schedules', price: 'Varies by resort/tour', climateNote: 'Fully outdoor', bestTime: 'Cooler months',
@@ -564,8 +596,9 @@ const ATTRACTIONS = [
 
   // ---------- Modern Landmarks & Shopping ----------
   {
-    id: 'etihad-towers', category: 'landmarks-shopping', icon: 'apartment', lat: 24.4658, lng: 54.3234,
+    id: 'etihad-towers', category: 'landmarks-shopping', icon: 'apartment', lat: 24.458718, lng: 54.321782,
     address: 'Corniche Rd West, Abu Dhabi', image: null,
+    priceTier: 'paid', setting: 'indoor',
     en: {
       name: 'Etihad Towers – Observation Deck at 300',
       hours: 'Daily approx. 10:00 AM–8:30 PM (confirm current times)', price: 'From AED 95', climateNote: 'Fully indoor', bestTime: 'Sunset',
@@ -582,9 +615,10 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'emirates-palace', category: 'landmarks-shopping', icon: 'hotel', lat: 24.4616, lng: 54.3178,
+    id: 'emirates-palace', category: 'landmarks-shopping', icon: 'hotel', lat: 24.4612381, lng: 54.3180193,
     address: 'West Corniche Rd, Abu Dhabi', image: "images/emirates-palace.jpg",
     source: 'https://unsplash.com/photos/brown-mansion-with-lights-during-nighttime-p0MGf8YvGRg?utm_source=unsplash&utm_medium=referral&utm_content=creditShareLink',
+    priceTier: 'free', setting: 'indoor',
     en: {
       name: 'Emirates Palace (Mandarin Oriental)',
       hours: 'Public areas generally accessible during the day', price: 'Free to view (dining varies)', climateNote: 'Fully indoor', bestTime: 'Evening',
@@ -601,8 +635,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'marina-mall', category: 'landmarks-shopping', icon: 'storefront', lat: 24.4759, lng: 54.3211,
+    id: 'marina-mall', category: 'landmarks-shopping', icon: 'storefront', lat: 24.4755453, lng: 54.3224506,
     address: 'Breakwater, Abu Dhabi', image: null,
+    priceTier: 'free', setting: 'indoor',
     en: {
       name: 'Marina Mall',
       hours: 'Daily approx. 10:00 AM–10:00 PM', price: 'Free entry', climateNote: 'Fully indoor', bestTime: 'Afternoon',
@@ -619,8 +654,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'yas-mall', category: 'landmarks-shopping', icon: 'storefront', lat: 24.4670, lng: 54.6042,
+    id: 'yas-mall', category: 'landmarks-shopping', icon: 'storefront', lat: 24.4888196, lng: 54.6086898,
     address: 'Yas Island, Abu Dhabi', image: null,
+    priceTier: 'free', setting: 'indoor',
     en: {
       name: 'Yas Mall',
       hours: 'Daily approx. 10:00 AM–10:00 PM', price: 'Free entry', climateNote: 'Fully indoor', bestTime: 'Afternoon',
@@ -637,8 +673,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'the-galleria', category: 'landmarks-shopping', icon: 'storefront', lat: 24.4986, lng: 54.3831,
+    id: 'the-galleria', category: 'landmarks-shopping', icon: 'storefront', lat: 24.4996981, lng: 54.3910736,
     address: 'Al Maryah Island, Abu Dhabi', image: null,
+    priceTier: 'free', setting: 'indoor',
     en: {
       name: 'The Galleria Al Maryah Island',
       hours: 'Daily approx. 10:00 AM–10:00 PM', price: 'Free entry', climateNote: 'Fully indoor', bestTime: 'Evening',
@@ -655,8 +692,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'al-maqta-bridge', category: 'landmarks-shopping', icon: 'bridge', lat: 24.4258, lng: 54.4515,
+    id: 'al-maqta-bridge', category: 'landmarks-shopping', icon: 'flyover', lat: 24.4202828, lng: 54.4861512,
     address: 'Al Maqta, Abu Dhabi (E10, at the Maqta Channel)', image: "images/bridge-al-maqta.jpg",
+    priceTier: 'free', setting: 'outdoor',
     en: {
       name: 'Al Maqta Bridge',
       hours: 'Always open (public road bridge)', price: 'Free', climateNote: 'Outdoor / drive-by landmark', bestTime: 'Any time — best viewed from the Maqta waterfront or Al Maqta Fort side',
@@ -681,8 +719,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'sheikh-zayed-bridge', category: 'landmarks-shopping', icon: 'bridge', lat: 24.4330, lng: 54.4345,
+    id: 'sheikh-zayed-bridge', category: 'landmarks-shopping', icon: 'flyover', lat: 24.4240682, lng: 54.4861438,
     address: 'Maqta Channel, Abu Dhabi (E10/E11 gateway to the island)', image: "images/bridge-sheik-zayed.jpg",
+    priceTier: 'free', setting: 'outdoor',
     en: {
       name: 'Sheikh Zayed Bridge',
       hours: 'Always open (public road bridge)', price: 'Free', climateNote: 'Outdoor / drive-by landmark', bestTime: 'Night — the dynamic lighting is best seen after dark',
@@ -707,8 +746,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'al-reem-island-bridge', category: 'landmarks-shopping', icon: 'bridge', lat: 24.4952, lng: 54.3752,
+    id: 'al-reem-island-bridge', category: 'landmarks-shopping', icon: 'flyover', lat: 24.4942437, lng: 54.4068603,
     address: 'Al Reem Island, Abu Dhabi', image: "images/bridge_al-reem-island.jpg",
+    priceTier: 'free', setting: 'outdoor',
     en: {
       name: 'Al Reem Island Bridges',
       hours: 'Always open (public road bridges)', price: 'Free', climateNote: 'Outdoor / drive-by landmark', bestTime: 'Any time — good photo stop from the Reem Island waterfront',
@@ -733,8 +773,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'adnoc-hq', category: 'landmarks-shopping', icon: 'corporate_fare', lat: 24.4693, lng: 54.3288,
+    id: 'adnoc-hq', category: 'landmarks-shopping', icon: 'corporate_fare', lat: 24.4619703, lng: 54.3242125,
     address: 'Corniche Road, Abu Dhabi', image: "images/building-adnoc-hq.jpg",
+    priceTier: 'free', setting: 'outdoor',
     en: {
       name: 'ADNOC Headquarters',
       hours: 'Exterior viewable anytime; not open to the public inside', price: 'Free to view from outside', climateNote: 'Outdoor / drive-by landmark', bestTime: 'Evening — the tower is lit up after dark',
@@ -759,8 +800,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'aldar-hq', category: 'landmarks-shopping', icon: 'corporate_fare', lat: 24.4489, lng: 54.6066,
+    id: 'aldar-hq', category: 'landmarks-shopping', icon: 'corporate_fare', lat: 24.4411465, lng: 54.5753519,
     address: 'Al Raha Beach, Abu Dhabi', image: "images/building-aldar-hq.jpg",
+    priceTier: 'free', setting: 'outdoor',
     en: {
       name: 'Aldar HQ (The Coin Building)',
       hours: 'Exterior viewable anytime; not open to the public inside', price: 'Free to view from outside', climateNote: 'Outdoor / drive-by landmark', bestTime: 'Late afternoon — good light on the curved glass facade',
@@ -785,8 +827,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'capital-gate', category: 'landmarks-shopping', icon: 'corporate_fare', lat: 24.418637, lng: 54.434692,
+    id: 'capital-gate', category: 'landmarks-shopping', icon: 'corporate_fare', lat: 24.4184809, lng: 54.4344948,
     address: 'Abu Dhabi National Exhibition Centre, Abu Dhabi', image: "images/building-capital-tower.jpg",
+    priceTier: 'free', setting: 'outdoor',
     en: {
       name: 'Capital Gate (Capital Tower)',
       hours: 'Exterior viewable anytime; hotel and offices inside', price: 'Free to view from outside', climateNote: 'Outdoor / drive-by landmark', bestTime: 'Any time — the lean is most striking from the highway approach',
@@ -811,8 +854,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'wtc-abu-dhabi', category: 'landmarks-shopping', icon: 'corporate_fare', lat: 24.487722, lng: 54.357167,
+    id: 'wtc-abu-dhabi', category: 'landmarks-shopping', icon: 'corporate_fare', lat: 24.4894875, lng: 54.3567347,
     address: 'Hamdan Bin Mohammed St, Abu Dhabi', image: "images/Building-wtc.jpg",
+    priceTier: 'free', setting: 'mixed',
     en: {
       name: 'World Trade Center Abu Dhabi',
       hours: 'Mall typically 10:00 AM–10:00 PM; towers not open to the public', price: 'Free entry (mall)', climateNote: 'Mostly indoor (mall) / drive-by landmark (towers)', bestTime: 'Evening',
@@ -837,8 +881,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'al-bahr-towers', category: 'landmarks-shopping', icon: 'corporate_fare', lat: 24.4655, lng: 54.3985,
+    id: 'al-bahr-towers', category: 'landmarks-shopping', icon: 'corporate_fare', lat: 24.45661, lng: 54.400863,
     address: 'Al Salam Street, Abu Dhabi', image: "images/building-al-bahr-tower.jpg",
+    priceTier: 'free', setting: 'outdoor',
     en: {
       name: 'Al Bahr Towers',
       hours: 'Exterior viewable anytime; not open to the public inside', price: 'Free to view from outside', climateNote: 'Outdoor / drive-by landmark', bestTime: "Midday — best time to see the shading screens open and close",
@@ -864,8 +909,9 @@ const ATTRACTIONS = [
   },
   // ---------- Adventure & Desert ----------
   {
-    id: 'desert-safari', category: 'adventure', icon: 'landscape', lat: 23.1333, lng: 53.7833,
+    id: 'desert-safari', category: 'adventure', icon: 'landscape', lat: 22.8980774, lng: 53.9357609,
     address: 'Liwa / Empty Quarter, ~2.5 hr drive from Abu Dhabi city', image: null,
+    priceTier: 'varies', setting: 'outdoor',
     en: {
       name: 'Desert Safari & Dune Bashing (Liwa)',
       hours: 'Tours typically run afternoon into sunset', price: 'Varies by operator', climateNote: 'Fully outdoor', bestTime: 'Late afternoon',
@@ -882,8 +928,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'surf-abu-dhabi', category: 'adventure', icon: 'surfing', lat: 24.4310, lng: 54.4290,
+    id: 'surf-abu-dhabi', category: 'adventure', icon: 'surfing', lat: 24.4237846, lng: 54.3327684,
     address: 'Hudayriyat Island, Abu Dhabi', image: null,
+    priceTier: 'varies', setting: 'outdoor',
     en: {
       name: 'Surf Abu Dhabi',
       hours: 'Session-based booking — check official site', price: 'Varies by session', climateNote: 'Fully outdoor', bestTime: 'Morning',
@@ -900,8 +947,9 @@ const ATTRACTIONS = [
     }
   },
   {
-    id: 'masdar-city', category: 'adventure', icon: 'eco', lat: 24.4262, lng: 54.6152,
+    id: 'masdar-city', category: 'adventure', icon: 'eco', lat: 24.4266734, lng: 54.614979,
     address: 'Masdar City, near Abu Dhabi International Airport', image: null,
+    priceTier: 'free', setting: 'outdoor',
     en: {
       name: 'Masdar City',
       hours: 'Outdoor areas 24/7; visitor center hours vary', price: 'Free to explore', climateNote: 'Fully outdoor', bestTime: 'Morning',

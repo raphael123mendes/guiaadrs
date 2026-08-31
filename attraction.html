@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title id="page-title">AD Heritage</title>
+<title id="page-title">UAE Explorer by Stein</title>
 
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -13,16 +13,16 @@
 
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script src="theme.js"></script>
-<script>tailwind.config = AD_THEME_CONFIG;</script>
+<script>tailwind.config = AD_THEME_CONFIG; applyTheme(getTheme());</script>
 
 <style>
   .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-  .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.1); }
+  .glass-card { background: var(--glass-fill); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-stroke); box-shadow: var(--glass-shadow); }
   .hero-gradient { background: linear-gradient(to bottom, rgba(2,6,23,0) 0%, rgba(2,6,23,0.85) 60%, rgba(2,6,23,1) 100%); z-index: 5; }
   .card-image-gradient { background: linear-gradient(to top, rgba(2,6,23,0.9) 0%, rgba(2,6,23,0) 100%); z-index: 5; }
-  .leaflet-container { background-color: #051424 !important; }
-  .leaflet-tile-pane { filter: invert(100%) hue-rotate(180deg) brightness(90%) contrast(90%) saturate(60%); }
-  .mini-marker { background-color: #d97707; border-radius: 9999px; width: 18px; height: 18px; border: 3px solid #fde68a; box-shadow: 0 0 0 4px rgba(217,119,7,0.25); }
+  .leaflet-container { background-color: rgb(var(--color-background)) !important; }
+  .leaflet-tile-pane { filter: var(--map-tile-filter); }
+  .mini-marker { background-color: var(--marker-bg); border-radius: 9999px; width: 18px; height: 18px; border: 3px solid var(--marker-ring); box-shadow: 0 0 0 4px rgba(217,119,7,0.2); }
 </style>
 </head>
 <body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col">
@@ -34,13 +34,16 @@
       <span class="material-symbols-outlined">arrow_back</span>
       <span class="font-label-lg text-label-lg hidden sm:inline" id="back-label">Back to Discover</span>
     </a>
-    <a class="font-headline-sm text-headline-sm font-bold text-high-contrast-white tracking-tight" href="index.html">AD Heritage</a>
+    <a class="font-headline-sm text-headline-sm font-bold text-high-contrast-white tracking-tight" href="index.html">UAE Explorer</a>
     <div class="flex items-center gap-sm">
       <div class="flex items-center bg-surface-container rounded-full p-1 relative cursor-pointer border border-outline-variant" id="lang-toggle">
         <div class="absolute w-1/2 h-full bg-secondary-container rounded-full left-0 transition-transform duration-300 ease-in-out" id="lang-indicator"></div>
         <span class="relative z-10 px-3 py-1 text-xs font-semibold transition-colors" id="lang-en">EN</span>
         <span class="relative z-10 px-3 py-1 text-xs font-semibold transition-colors" id="lang-pt">PT</span>
       </div>
+      <button id="theme-toggle" class="flex items-center gap-xs text-on-surface-variant hover:text-soft-gold transition-colors p-2 rounded-full" title="Toggle light/dark mode" aria-label="Toggle light/dark mode">
+        <span class="material-symbols-outlined" id="theme-toggle-icon">light_mode</span>
+      </button>
       <button id="save-btn" class="flex items-center gap-xs text-on-surface-variant hover:text-soft-gold transition-colors p-2 rounded-full">
         <span class="material-symbols-outlined" id="save-icon">bookmark_border</span>
       </button>
@@ -55,16 +58,11 @@
       <div class="absolute inset-0 flex items-center justify-center" id="hero-placeholder"></div>
       <div class="absolute inset-0 hero-gradient"></div>
     </div>
-    <div class="relative z-10 w-full max-w-[1440px] mx-auto px-lg md:px-xxl pb-xl flex flex-col md:flex-row justify-between items-end gap-lg">
+    <div class="relative z-10 w-full max-w-[1440px] mx-auto px-lg md:px-xxl pb-xl">
       <div class="max-w-3xl">
         <span id="hero-category" class="inline-block bg-secondary-container/20 text-secondary-fixed border border-secondary-container/50 px-md py-xs rounded-full font-label-sm text-label-sm uppercase tracking-widest backdrop-blur-sm mb-md"></span>
-        <h1 id="hero-title" class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-high-contrast-white mb-md"></h1>
-        <p id="hero-desc" class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl"></p>
-      </div>
-      <div class="flex flex-col sm:flex-row gap-md w-full md:w-auto">
-        <a id="directions-btn" target="_blank" title="Get Directions" aria-label="Get Directions" class="bg-secondary-container text-on-secondary-container hover:brightness-110 w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-[0_0_15px_rgba(217,119,7,0.15)]">
-          <span class="material-symbols-outlined text-2xl">directions</span><span id="directions-label" class="sr-only">Get Directions</span>
-        </a>
+        <h1 id="hero-title" class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-white mb-md"></h1>
+        <p id="hero-desc" class="font-body-lg text-body-lg text-white/80 max-w-2xl"></p>
       </div>
     </div>
   </section>
@@ -93,8 +91,18 @@
           </div>
         </section>
 
+        <section id="gallery-section" style="display:none;">
+          <h2 class="font-headline-md text-headline-md text-high-contrast-white mb-lg" id="gallery-title">Visual Journey</h2>
+          <div id="gallery-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-sm"></div>
+        </section>
+
         <section>
-          <h2 class="font-headline-md text-headline-md text-high-contrast-white mb-lg" id="on-map-title">On the Map</h2>
+          <div class="flex items-center justify-between mb-lg gap-md">
+            <h2 class="font-headline-md text-headline-md text-high-contrast-white" id="on-map-title">On the Map</h2>
+            <a id="directions-btn" target="_blank" title="Get Directions" aria-label="Get Directions" class="bg-secondary-container text-on-secondary-container hover:brightness-110 w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-[0_0_15px_rgba(217,119,7,0.15)] flex-shrink-0">
+              <span class="material-symbols-outlined text-xl">directions</span><span id="directions-label" class="sr-only">Get Directions</span>
+            </a>
+          </div>
           <div class="glass-card rounded-xl overflow-hidden h-72">
             <div id="mini-map" class="w-full h-full"></div>
           </div>
@@ -150,7 +158,10 @@
 <footer class="w-full py-xl border-t border-outline-variant/30 bg-surface-container-lowest text-on-surface-variant font-body-md text-body-md">
   <div class="max-w-[1440px] mx-auto px-lg md:px-xxl grid grid-cols-1 md:grid-cols-2 gap-lg items-center">
     <div class="flex flex-col gap-sm">
-      <span class="font-headline-sm text-headline-sm text-high-contrast-white">AD Heritage</span>
+      <div class="flex items-baseline gap-xs">
+        <span class="font-headline-sm text-headline-sm text-high-contrast-white">UAE Explorer</span>
+        <span class="text-xs text-on-surface-variant">by Stein</span>
+      </div>
       <p id="footer-tag"></p>
     </div>
     <div class="md:text-right">
@@ -168,7 +179,7 @@
 
   function renderContent() {
     const name = tr(attr, 'name');
-    document.getElementById('page-title').textContent = `${name} — AD Heritage`;
+    document.getElementById('page-title').textContent = `${name} — UAE Explorer by Stein`;
     document.getElementById('hero-category').textContent = categoryLabel(attr.category);
     document.getElementById('hero-title').textContent = name;
     document.getElementById('hero-desc').textContent = tr(attr, 'description');
@@ -197,6 +208,7 @@
     document.getElementById('nearby-title').textContent = t('nearbyTitle');
     document.getElementById('footer-tag').textContent = t('footerTag');
     document.getElementById('footer-back-link').textContent = t('footerBack');
+    document.getElementById('gallery-title').textContent = t('galleryTitle');
 
     // Fun facts
     const facts = tr(attr, 'funFacts') || [];
@@ -241,16 +253,33 @@
     mountPhotos(nearbyContainer);
   }
 
-  // Hero photo: placeholder renders immediately, real photo (if present) fades in
-  document.getElementById('hero-image-container').dataset.attrId = attr.id;
-  const heroPlaceholder = document.getElementById('hero-placeholder');
-  heroPlaceholder.style.cssText += placeholderStyle(attr.category);
-  heroPlaceholder.innerHTML = `<span class="material-symbols-outlined text-white/10" style="font-size:220px">${attr.icon}</span>`;
+  // Real photo gallery ("Visual Journey") — tries images/{id}-1.jpg through
+  // {id}-4.jpg; only ever shows the section if at least one actually loads.
+  // Doesn't depend on language or theme, so it only needs to run once.
+  function renderGallery() {
+    const grid = document.getElementById('gallery-grid');
+    grid.innerHTML = '';
+    mountGallery(grid, attr, 4).then(count => {
+      document.getElementById('gallery-section').style.display = count > 0 ? '' : 'none';
+    });
+  }
 
+  // Hero photo: placeholder renders immediately, real photo (if present) fades in.
+  // Extracted into its own function so the theme toggle can re-run it —
+  // the placeholder's gradient/icon colors are baked in at render time.
+  function renderHeroPhoto() {
+    document.getElementById('hero-image-container').dataset.attrId = attr.id;
+    const heroPlaceholder = document.getElementById('hero-placeholder');
+    heroPlaceholder.style.cssText = 'position:absolute; inset:0; display:flex; align-items:center; justify-content:center; ' + placeholderStyle(attr.category);
+    const heroIconTint = getTheme() === 'light' ? 'text-black/10' : 'text-white/10';
+    heroPlaceholder.innerHTML = `<span class="material-symbols-outlined ${heroIconTint}" style="font-size:220px">${attr.icon}</span>`;
+  }
+
+  let miniTileLayer;
   function initMiniMap() {
     miniMap = L.map('mini-map', { zoomControl: false, dragging: true, scrollWheelZoom: false }).setView([attr.lat, attr.lng], 13);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; OpenStreetMap contributors', subdomains: 'abcd', maxZoom: 19
+    miniTileLayer = L.tileLayer(getMapTileUrl(getTheme()), {
+      attribution: MAP_ATTRIBUTION, subdomains: 'abcd', maxZoom: 19
     }).addTo(miniMap);
     L.marker([attr.lat, attr.lng], {
       icon: L.divIcon({ className: '', html: '<div class="mini-marker"></div>', iconSize: [18, 18], iconAnchor: [9, 9] })
@@ -286,10 +315,32 @@
     renderContent();
   });
 
+  // --- Theme (light/dark) toggle ---
+  function syncThemeToggleUI() {
+    const icon = getTheme() === 'light' ? 'dark_mode' : 'light_mode';
+    const el = document.getElementById('theme-toggle-icon');
+    if (el) el.textContent = icon;
+  }
+  document.getElementById('theme-toggle').addEventListener('click', () => {
+    const next = getTheme() === 'light' ? 'dark' : 'light';
+    setTheme(next);
+    applyTheme(next);
+    syncThemeToggleUI();
+    if (miniTileLayer) miniTileLayer.setUrl(getMapTileUrl(next));
+    // Nearby-card placeholders and the hero placeholder bake their colors
+    // in at render time, so they need a re-render to pick up the new
+    // theme (the gallery/real photos and the mini-map marker don't).
+    renderContent();
+    renderHeroPhoto();
+  });
+
   refreshSaveIcon();
   syncLangToggleUI();
+  syncThemeToggleUI();
   renderContent();
+  renderHeroPhoto();
   mountPhotos(document.getElementById('hero-image-container'));
+  renderGallery();
   initMiniMap();
 </script>
 </body>

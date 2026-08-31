@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>AD Heritage — Discover Abu Dhabi</title>
+<title>UAE Explorer by Stein — Discover the Emirates</title>
 
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -13,23 +13,24 @@
 
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script src="theme.js"></script>
-<script>tailwind.config = AD_THEME_CONFIG;</script>
+<script>tailwind.config = AD_THEME_CONFIG; applyTheme(getTheme());</script>
 
 <style>
   .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-  .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.1); }
+  .glass-card { background: var(--glass-fill); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-stroke); box-shadow: var(--glass-shadow); }
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-  .leaflet-container { background-color: #051424 !important; font-family: 'Hanken Grotesk', sans-serif; }
-  .leaflet-tile-pane { filter: invert(100%) hue-rotate(180deg) brightness(90%) contrast(90%) saturate(60%); }
-  .custom-map-marker { background-color: #d97707; color: #2f1500; border-radius: 9999px; display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: transform .25s ease, box-shadow .25s ease; cursor:pointer; border: 2px solid rgba(253,230,138,0.6); }
+  .leaflet-container { background-color: rgb(var(--color-background)) !important; font-family: 'Hanken Grotesk', sans-serif; }
+  .leaflet-tile-pane { filter: var(--map-tile-filter); }
+  .custom-map-marker { background-color: var(--marker-bg); color: var(--marker-fg); border-radius: 9999px; display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 12px rgba(0,0,0,0.35); transition: transform .25s ease, box-shadow .25s ease; cursor:pointer; border: 2px solid var(--marker-ring); }
   .custom-map-marker:hover, .custom-map-marker.active { transform: scale(1.15); box-shadow: 0 10px 20px rgba(217,119,7,0.4); }
-  .leaflet-popup-content-wrapper { border-radius: 12px; background-color: #122131; color: #d4e4fa; border: 1px solid #46464c; }
-  .leaflet-popup-tip { background-color: #122131; }
+  .leaflet-popup-content-wrapper { border-radius: 12px; background-color: rgb(var(--color-surface-container)); color: rgb(var(--color-on-surface)); border: 1px solid rgb(var(--color-outline-variant)); }
+  .leaflet-popup-tip { background-color: rgb(var(--color-surface-container)); }
   .fab-pulse { animation: pulse 2.4s infinite; }
   @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(217,119,7,0.35); } 70% { box-shadow: 0 0 0 16px rgba(217,119,7,0); } 100% { box-shadow: 0 0 0 0 rgba(217,119,7,0); } }
   .chip { transition: all .2s ease; }
-  .chip.active { background-color: #d97707; color: #2f1500; border-color: #d97707; }
+  .chip.active { background-color: var(--chip-active-bg); color: var(--chip-active-fg); border-color: var(--chip-active-bg); }
+  .filter-select { background: var(--glass-fill); border: 1px solid rgb(var(--color-outline-variant)); color: rgb(var(--color-on-surface)); }
 </style>
 </head>
 <body class="bg-background text-on-background font-body-md antialiased overflow-hidden flex h-screen">
@@ -39,14 +40,19 @@
   <div class="flex items-center gap-sm mb-md mt-sm">
     <span class="material-symbols-outlined text-soft-gold text-3xl">account_balance</span>
     <div>
-      <h1 class="font-headline-sm text-headline-sm text-high-contrast-white leading-tight" id="sidebar-title">AD Heritage</h1>
-      <p class="text-xs text-on-surface-variant" id="sidebar-tagline">Modern Heritage</p>
+      <h1 class="font-headline-sm text-headline-sm text-high-contrast-white leading-tight" id="sidebar-title">UAE Explorer</h1>
+      <p class="text-xs text-on-surface-variant" id="sidebar-tagline">by Stein</p>
     </div>
   </div>
-  <div class="flex items-center bg-surface-container rounded-full p-1 relative cursor-pointer border border-outline-variant mb-lg" id="lang-toggle">
-    <div class="absolute w-1/2 h-full bg-secondary-container rounded-full left-0 transition-transform duration-300 ease-in-out" id="lang-indicator"></div>
-    <span class="relative z-10 flex-1 text-center px-4 py-1.5 text-sm font-semibold transition-colors" id="lang-en">EN</span>
-    <span class="relative z-10 flex-1 text-center px-4 py-1.5 text-sm font-semibold transition-colors" id="lang-pt">PT</span>
+  <div class="flex items-center gap-sm mb-lg">
+    <div class="flex items-center bg-surface-container rounded-full p-1 relative cursor-pointer border border-outline-variant flex-grow" id="lang-toggle">
+      <div class="absolute w-1/2 h-full bg-secondary-container rounded-full left-0 transition-transform duration-300 ease-in-out" id="lang-indicator"></div>
+      <span class="relative z-10 flex-1 text-center px-4 py-1.5 text-sm font-semibold transition-colors" id="lang-en">EN</span>
+      <span class="relative z-10 flex-1 text-center px-4 py-1.5 text-sm font-semibold transition-colors" id="lang-pt">PT</span>
+    </div>
+    <button class="flex items-center justify-center w-9 h-9 rounded-full bg-surface-container border border-outline-variant text-on-surface-variant hover:text-soft-gold transition-colors flex-shrink-0" id="theme-toggle" title="Toggle light/dark mode" aria-label="Toggle light/dark mode">
+      <span class="material-symbols-outlined text-lg" id="theme-toggle-icon">light_mode</span>
+    </button>
   </div>
   <ul class="flex flex-col gap-xs flex-grow overflow-y-auto no-scrollbar" id="sidebar-categories">
     <li>
@@ -70,13 +76,14 @@
   <!-- Mobile top bar -->
   <header class="md:hidden fixed top-0 w-full z-50 bg-surface-container-lowest/90 backdrop-blur-md border-b border-outline-variant">
     <div class="flex justify-between items-center w-full px-lg h-16">
-      <span class="font-headline-sm text-headline-sm text-high-contrast-white">AD Heritage</span>
+      <span class="font-headline-sm text-headline-sm text-high-contrast-white">UAE Explorer</span>
       <div class="flex items-center gap-sm">
         <div class="flex items-center bg-surface-container rounded-full p-1 relative cursor-pointer" id="lang-toggle-mobile">
           <div class="absolute w-1/2 h-full bg-secondary-container rounded-full left-0 transition-transform duration-300 ease-in-out" id="lang-indicator-mobile"></div>
           <span class="relative z-10 px-3 py-0.5 text-xs font-semibold transition-colors" id="lang-en-mobile">EN</span>
           <span class="relative z-10 px-3 py-0.5 text-xs font-semibold transition-colors" id="lang-pt-mobile">PT</span>
         </div>
+        <button class="material-symbols-outlined text-on-surface-variant" id="theme-toggle-mobile" title="Toggle light/dark mode" aria-label="Toggle light/dark mode">light_mode</button>
         <button class="material-symbols-outlined text-on-surface-variant" id="fab-map-toggle-mobile-icon">map</button>
       </div>
     </div>
@@ -98,6 +105,12 @@
       <div class="w-full relative flex items-center glass-card rounded-xl p-2 focus-within:border-soft-gold transition-all mb-md max-w-2xl">
         <span class="material-symbols-outlined text-on-surface-variant ml-3">search</span>
         <input class="w-full bg-transparent border-none focus:ring-0 text-body-md font-body-md text-on-surface py-2 px-3 placeholder-on-surface-variant" id="search-input" type="text"/>
+      </div>
+
+      <!-- Quick filters: price + indoor/outdoor -->
+      <div class="flex flex-wrap gap-sm mb-sm">
+        <select class="filter-select rounded-lg text-sm font-label-lg px-3 py-2 cursor-pointer" id="price-filter"></select>
+        <select class="filter-select rounded-lg text-sm font-label-lg px-3 py-2 cursor-pointer" id="setting-filter"></select>
       </div>
 
       <!-- Mobile category chips duplicate target hidden, desktop chips row -->
@@ -130,7 +143,10 @@
       <footer class="w-full py-lg glass-card rounded-xl mt-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-lg items-center px-lg">
           <div class="flex flex-col gap-sm">
-            <span class="font-headline-sm text-headline-sm text-high-contrast-white">AD Heritage</span>
+            <div class="flex items-baseline gap-xs">
+              <span class="font-headline-sm text-headline-sm text-high-contrast-white">UAE Explorer</span>
+              <span class="text-xs text-on-surface-variant">by Stein</span>
+            </div>
             <p class="font-body-md text-sm text-on-surface-variant" id="footer-tag"></p>
           </div>
           <div class="flex flex-wrap gap-md md:justify-end">
@@ -150,7 +166,20 @@
 <script src="data.js"></script>
 <script crossorigin="" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-  let map, markers = {}, activeCategory = 'all', isMapVisibleMobile = false;
+  let map, tileLayer, markers = {}, activeCategory = 'all', activePriceFilter = 'all', activeSettingFilter = 'all', isMapVisibleMobile = false;
+
+  // Populates the two quick-filter <select> elements from UI_STRINGS.
+  // Re-run on language switch so option text stays translated.
+  function buildQuickFilters() {
+    const priceSelect = document.getElementById('price-filter');
+    const settingSelect = document.getElementById('setting-filter');
+    const priceOptions = [['all', t('priceAll')], ['free', t('priceFree')], ['paid', t('pricePaid')], ['varies', t('priceVaries')]];
+    const settingOptions = [['all', t('settingAll')], ['indoor', t('settingIndoor')], ['outdoor', t('settingOutdoor')], ['mixed', t('settingMixed')]];
+    priceSelect.innerHTML = priceOptions.map(([v, label]) => `<option value="${v}">${label}</option>`).join('');
+    settingSelect.innerHTML = settingOptions.map(([v, label]) => `<option value="${v}">${label}</option>`).join('');
+    priceSelect.value = activePriceFilter;
+    settingSelect.value = activeSettingFilter;
+  }
 
   // Build sidebar + chip category lists from data.js
   function buildCategoryUI() {
@@ -204,10 +233,12 @@
     const q = document.getElementById('search-input').value.trim().toLowerCase();
     return ATTRACTIONS.filter(a => {
       const catMatch = activeCategory === 'all' || a.category === activeCategory;
+      const priceMatch = activePriceFilter === 'all' || a.priceTier === activePriceFilter;
+      const settingMatch = activeSettingFilter === 'all' || a.setting === activeSettingFilter;
       const name = tr(a, 'name').toLowerCase();
       const desc = tr(a, 'description').toLowerCase();
       const searchMatch = !q || name.includes(q) || desc.includes(q) || categoryLabel(a.category).toLowerCase().includes(q);
-      return catMatch && searchMatch;
+      return catMatch && priceMatch && settingMatch && searchMatch;
     });
   }
 
@@ -251,8 +282,11 @@
 
   function initMap() {
     map = L.map('map', { zoomControl: false, scrollWheelZoom: true }).setView([24.46, 54.45], 10);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; OpenStreetMap contributors',
+    // CARTO's dark_all/light_all — purpose-built per-theme styles, so no
+    // CSS filter trickery needed. tileLayer.setUrl() swaps the style live
+    // when the theme toggle fires (see toggleTheme() below).
+    tileLayer = L.tileLayer(getMapTileUrl(getTheme()), {
+      attribution: MAP_ATTRIBUTION,
       subdomains: 'abcd', maxZoom: 19
     }).addTo(map);
     L.control.zoom({ position: 'bottomright' }).addTo(map);
@@ -325,6 +359,8 @@
   });
 
   document.getElementById('search-input').addEventListener('input', renderList);
+  document.getElementById('price-filter').addEventListener('change', (e) => { activePriceFilter = e.target.value; renderList(); });
+  document.getElementById('setting-filter').addEventListener('change', (e) => { activeSettingFilter = e.target.value; renderList(); });
 
   // --- Language: apply static text + wire the toggle(s) ---
   function applyStaticText() {
@@ -336,7 +372,8 @@
     document.getElementById('discover-subtitle').textContent = t('discoverSubtitle');
     document.getElementById('search-input').placeholder = t('searchPlaceholder');
     document.getElementById('footer-tag').textContent = t('footerTag');
-    document.getElementById('footer-stats').textContent = `34 ${t('footerStats')}`;
+    document.getElementById('footer-stats').textContent = `${ATTRACTIONS.length} ${t('footerStats')}`;
+    buildQuickFilters();
   }
 
   function syncLangToggleUI() {
@@ -364,8 +401,32 @@
   document.getElementById('lang-toggle').addEventListener('click', () => switchLanguage(getLang() === 'en' ? 'pt' : 'en'));
   document.getElementById('lang-toggle-mobile').addEventListener('click', () => switchLanguage(getLang() === 'en' ? 'pt' : 'en'));
 
+  // --- Theme (light/dark) toggle ---
+  function syncThemeToggleUI() {
+    // Icon shown is the mode you'll switch TO, not the current one.
+    const icon = getTheme() === 'light' ? 'dark_mode' : 'light_mode';
+    const iconEl = document.getElementById('theme-toggle-icon');
+    const mobileEl = document.getElementById('theme-toggle-mobile');
+    if (iconEl) iconEl.textContent = icon;
+    if (mobileEl) mobileEl.textContent = icon;
+  }
+  function toggleTheme() {
+    const next = getTheme() === 'light' ? 'dark' : 'light';
+    setTheme(next);
+    applyTheme(next);
+    syncThemeToggleUI();
+    if (tileLayer) tileLayer.setUrl(getMapTileUrl(next));
+    // Placeholder gradients/icons are baked in as inline styles at render
+    // time, so a full re-render is needed to pick up the new theme's
+    // colors (map markers/popups update automatically via CSS variables).
+    renderList();
+  }
+  document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+  document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
+
   applyStaticText();
   syncLangToggleUI();
+  syncThemeToggleUI();
   buildCategoryUI();
   setActiveCategory('all');
   document.addEventListener('DOMContentLoaded', initMap);
