@@ -654,7 +654,214 @@ const ATTRACTIONS = [
       funFacts: ['Fica junto a um calçadão paisagístico à beira-mar, popular para caminhadas noturnas.']
     }
   },
-
+  {
+    id: 'al-maqta-bridge', category: 'landmarks-shopping', icon: 'bridge', lat: 24.4258, lng: 54.4515,
+    address: 'Al Maqta, Abu Dhabi (E10, at the Maqta Channel)', image: "images/bridge-al-maqta.jpg",
+    en: {
+      name: 'Al Maqta Bridge',
+      hours: 'Always open (public road bridge)', price: 'Free', climateNote: 'Outdoor / drive-by landmark', bestTime: 'Any time — best viewed from the Maqta waterfront or Al Maqta Fort side',
+      description: "Abu Dhabi's first permanent bridge to the mainland, its distinctive blue steel arch has linked the island to the rest of the UAE since the 1960s.",
+      history: 'Built in 1968 and opened by Sheikh Zayed bin Sultan Al Nahyan, Al Maqta Bridge was the first fixed crossing to Abu Dhabi island, replacing a tidal causeway that could only be crossed at low tide. It was expanded with a second arch in the late 1990s as traffic grew, and sits beside the centuries-old Maqta watchtower.',
+      funFacts: [
+        'Before the bridge, travelers had to wait for low tide to cross the causeway on foot or by camel.',
+        "The bridge was built by the same Austrian engineering firm, Waagner-Biró, that built Dubai's first bridge over the Creek.",
+        'Its blue paint has become a distinctive, recognizable feature of the crossing.'
+      ]
+    },
+    pt: {
+      name: 'Ponte Al Maqta',
+      hours: 'Sempre aberta (ponte pública)', price: 'Gratuito', climateNote: 'Ao ar livre / marco para observar de passagem', bestTime: 'Qualquer horário — melhor vista a partir da orla de Al Maqta ou do lado do Forte Al Maqta',
+      description: 'A primeira ponte permanente de Abu Dhabi para o continente, seu característico arco de aço azul liga a ilha ao resto dos Emirados desde os anos 1960.',
+      history: 'Construída em 1968 e inaugurada por Sheikh Zayed bin Sultan Al Nahyan, a Ponte Al Maqta foi a primeira travessia fixa para a ilha de Abu Dhabi, substituindo uma passagem que só podia ser cruzada na maré baixa. Foi ampliada com um segundo arco no final dos anos 1990 com o crescimento do tráfego, e fica ao lado da torre de vigia histórica de Maqta, com séculos de idade.',
+      funFacts: [
+        'Antes da ponte, os viajantes precisavam esperar a maré baixa para atravessar a passagem a pé ou de camelo.',
+        'A ponte foi construída pela mesma empresa de engenharia austríaca, Waagner-Biró, responsável pela primeira ponte de Dubai sobre o Creek.',
+        'Sua pintura azul se tornou uma característica marcante e reconhecível da travessia.'
+      ]
+    }
+  },
+  {
+    id: 'sheikh-zayed-bridge', category: 'landmarks-shopping', icon: 'bridge', lat: 24.4330, lng: 54.4345,
+    address: 'Maqta Channel, Abu Dhabi (E10/E11 gateway to the island)', image: "images/bridge-sheik-zayed.jpg",
+    en: {
+      name: 'Sheikh Zayed Bridge',
+      hours: 'Always open (public road bridge)', price: 'Free', climateNote: 'Outdoor / drive-by landmark', bestTime: 'Night — the dynamic lighting is best seen after dark',
+      description: "A dramatic 842-metre wave-shaped bridge designed by Zaha Hadid, forming Abu Dhabi's most architecturally striking gateway to the island.",
+      history: 'Opened in 2010 after seven years of construction, the bridge was designed by Pritzker Prize-winning architect Dame Zaha Hadid as the third crossing over the Maqta Channel, complementing Al Maqta Bridge. Its arches rise up to 60 metres above the water.',
+      funFacts: [
+        "It's often described as one of the most complex bridges ever engineered.",
+        'The undulating steel arches were designed to evoke desert sand dunes.',
+        'A dynamic lighting system washes the bridge in shifting colors after dark.'
+      ]
+    },
+    pt: {
+      name: 'Ponte Sheikh Zayed',
+      hours: 'Sempre aberta (ponte pública)', price: 'Gratuito', climateNote: 'Ao ar livre / marco para observar de passagem', bestTime: 'À noite — a iluminação dinâmica fica ainda mais bonita depois do anoitecer',
+      description: 'Uma impressionante ponte de 842 metros em forma de onda, projetada por Zaha Hadid, formando o portal arquitetonicamente mais marcante de Abu Dhabi para a ilha.',
+      history: 'Inaugurada em 2010 após sete anos de construção, a ponte foi projetada pela arquiteta vencedora do Prêmio Pritzker, Dame Zaha Hadid, como a terceira travessia sobre o Canal de Maqta, complementando a Ponte Al Maqta. Seus arcos chegam a 60 metros de altura sobre a água.',
+      funFacts: [
+        'É frequentemente descrita como uma das pontes mais complexas já projetadas.',
+        'Os arcos de aço ondulados foram desenhados para evocar dunas de areia do deserto.',
+        'Um sistema de iluminação dinâmica banha a ponte em cores variáveis após o anoitecer.'
+      ]
+    }
+  },
+  {
+    id: 'al-reem-island-bridge', category: 'landmarks-shopping', icon: 'bridge', lat: 24.4952, lng: 54.3752,
+    address: 'Al Reem Island, Abu Dhabi', image: "images/bridge_al-reem-island.jpg",
+    en: {
+      name: 'Al Reem Island Bridges',
+      hours: 'Always open (public road bridges)', price: 'Free', climateNote: 'Outdoor / drive-by landmark', bestTime: 'Any time — good photo stop from the Reem Island waterfront',
+      description: "A network of bridges connecting the man-made Al Reem Island to Abu Dhabi's mainland and neighboring Al Maryah and Saadiyat islands, and a good vantage point for the Reem skyline.",
+      history: "As Al Reem Island grew into one of Abu Dhabi's largest residential and business districts, multiple bridges were built to connect it — from the original Hazza Bin Zayed Street and Al Maryah bridges, to a new set of marine bridges linking directly to the Sheikh Khalifa Bin Zayed Highway, opened in 2026.",
+      funFacts: [
+        'Al Reem Island is connected by several separate bridges rather than a single crossing, spreading traffic across multiple routes.',
+        'The newest marine bridges, opened in 2026, are designed to carry up to 7,200 vehicles per hour.',
+        "A future 'Mid-Island Parkway' project aims to eventually link Reem directly to Saadiyat Island and Al Raha Beach."
+      ]
+    },
+    pt: {
+      name: 'Pontes da Ilha Al Reem',
+      hours: 'Sempre abertas (pontes públicas)', price: 'Gratuito', climateNote: 'Ao ar livre / marco para observar de passagem', bestTime: 'Qualquer horário — bom ponto de fotos a partir da orla da Ilha Al Reem',
+      description: 'Uma rede de pontes que conecta a ilha artificial de Al Reem ao continente de Abu Dhabi e às vizinhas ilhas de Al Maryah e Saadiyat, além de um bom mirante para o horizonte de Reem.',
+      history: 'À medida que a Ilha Al Reem se tornou um dos maiores bairros residenciais e comerciais de Abu Dhabi, várias pontes foram construídas para conectá-la — desde as pontes originais da Hazza Bin Zayed Street e Al Maryah, até um novo conjunto de pontes marítimas ligando diretamente à Rodovia Sheikh Khalifa Bin Zayed, inaugurado em 2026.',
+      funFacts: [
+        'A Ilha Al Reem é conectada por várias pontes separadas, em vez de uma única travessia, distribuindo o tráfego por diferentes rotas.',
+        'As pontes marítimas mais novas, inauguradas em 2026, foram projetadas para suportar até 7.200 veículos por hora.',
+        'Um futuro projeto de "Mid-Island Parkway" pretende eventualmente ligar Reem diretamente à Ilha Saadiyat e à Al Raha Beach.'
+      ]
+    }
+  },
+  {
+    id: 'adnoc-hq', category: 'landmarks-shopping', icon: 'corporate_fare', lat: 24.4693, lng: 54.3288,
+    address: 'Corniche Road, Abu Dhabi', image: "images/building-adnoc-hq.jpg",
+    en: {
+      name: 'ADNOC Headquarters',
+      hours: 'Exterior viewable anytime; not open to the public inside', price: 'Free to view from outside', climateNote: 'Outdoor / drive-by landmark', bestTime: 'Evening — the tower is lit up after dark',
+      description: "A sleek 342-metre skyscraper on the Corniche, headquarters of the Abu Dhabi National Oil Company and one of the tallest buildings in the city.",
+      history: "Completed in 2017 after eight years of construction, the tower was designed by architecture firm HOK with a double-skin facade for energy efficiency, and anchors ADNOC's operations along Abu Dhabi's waterfront.",
+      funFacts: [
+        "At 342 metres and 76 floors, it's one of the tallest buildings in Abu Dhabi.",
+        'The building incorporates a heritage museum alongside its office space.',
+        'Its double-skin facade helps manage heat gain in the desert climate.'
+      ]
+    },
+    pt: {
+      name: 'Sede da ADNOC',
+      hours: 'Exterior visível a qualquer hora; interior não é aberto ao público', price: 'Gratuito para ver por fora', climateNote: 'Ao ar livre / marco para observar de passagem', bestTime: 'Noite — a torre é iluminada após o anoitecer',
+      description: 'Um elegante arranha-céu de 342 metros na Corniche, sede da Companhia Nacional de Petróleo de Abu Dhabi (ADNOC) e um dos edifícios mais altos da cidade.',
+      history: 'Concluída em 2017 após oito anos de construção, a torre foi projetada pelo escritório de arquitetura HOK com uma fachada de pele dupla para eficiência energética, e é a âncora das operações da ADNOC na orla de Abu Dhabi.',
+      funFacts: [
+        'Com 342 metros e 76 andares, é um dos edifícios mais altos de Abu Dhabi.',
+        'O edifício inclui um museu do patrimônio ao lado dos espaços de escritório.',
+        'Sua fachada de pele dupla ajuda a controlar o ganho de calor no clima desértico.'
+      ]
+    }
+  },
+  {
+    id: 'aldar-hq', category: 'landmarks-shopping', icon: 'corporate_fare', lat: 24.4489, lng: 54.6066,
+    address: 'Al Raha Beach, Abu Dhabi', image: "images/building-aldar-hq.jpg",
+    en: {
+      name: 'Aldar HQ (The Coin Building)',
+      hours: 'Exterior viewable anytime; not open to the public inside', price: 'Free to view from outside', climateNote: 'Outdoor / drive-by landmark', bestTime: 'Late afternoon — good light on the curved glass facade',
+      description: "The world's first circular skyscraper, nicknamed 'the Coin Building' for its unmistakable disc shape rising over Al Raha Beach.",
+      history: "Completed in 2010 as the headquarters of Aldar Properties, one of Abu Dhabi's largest developers, the 110-metre tower uses a diagonal steel diagrid to achieve its fully circular form — a first for a building of this kind.",
+      funFacts: [
+        "It's the world's first circular skyscraper.",
+        'Its curved glass facade is made of triangular flat glass panels arranged into diamond shapes.',
+        "It sits right beside the highway from Dubai, making it one of the first Abu Dhabi landmarks visitors see arriving by road."
+      ]
+    },
+    pt: {
+      name: 'Sede da Aldar (Edifício Moeda)',
+      hours: 'Exterior visível a qualquer hora; interior não é aberto ao público', price: 'Gratuito para ver por fora', climateNote: 'Ao ar livre / marco para observar de passagem', bestTime: 'Final da tarde — boa luz na fachada de vidro curva',
+      description: 'O primeiro arranha-céu circular do mundo, apelidado de "Edifício Moeda" por seu inconfundível formato de disco erguendo-se sobre Al Raha Beach.',
+      history: 'Concluída em 2010 como sede da Aldar Properties, uma das maiores incorporadoras de Abu Dhabi, a torre de 110 metros usa uma grade diagonal de aço (diagrid) para alcançar sua forma totalmente circular — uma novidade para um edifício desse tipo.',
+      funFacts: [
+        'É o primeiro arranha-céu circular do mundo.',
+        'Sua fachada de vidro curva é feita de painéis triangulares planos organizados em formas de diamante.',
+        'Fica bem ao lado da rodovia vinda de Dubai, sendo um dos primeiros marcos de Abu Dhabi que os visitantes veem ao chegar de carro.'
+      ]
+    }
+  },
+  {
+    id: 'capital-gate', category: 'landmarks-shopping', icon: 'corporate_fare', lat: 24.418637, lng: 54.434692,
+    address: 'Abu Dhabi National Exhibition Centre, Abu Dhabi', image: "images/building-capital-tower.jpg",
+    en: {
+      name: 'Capital Gate (Capital Tower)',
+      hours: 'Exterior viewable anytime; hotel and offices inside', price: 'Free to view from outside', climateNote: 'Outdoor / drive-by landmark', bestTime: 'Any time — the lean is most striking from the highway approach',
+      description: "Known as the 'Leaning Tower of Abu Dhabi,' this 160-metre skyscraper inclines 18 degrees westward — more than four times the lean of Pisa's tower.",
+      history: 'Completed in 2011 and designed by RMJM, Capital Gate was engineered with a diagrid structure and a foundation of 490 piles to achieve its extreme lean safely, earning it a Guinness World Record for the world\'s furthest-leaning man-made tower.',
+      funFacts: [
+        "Guinness World Records certified it as the world's furthest-leaning man-made tower.",
+        'Its 18-degree lean is more than four times that of the Leaning Tower of Pisa.',
+        'It houses the Andaz Capital Gate hotel, including a pool cantilevered off the 19th floor.'
+      ]
+    },
+    pt: {
+      name: 'Capital Gate (Torre Capital)',
+      hours: 'Exterior visível a qualquer hora; hotel e escritórios no interior', price: 'Gratuito para ver por fora', climateNote: 'Ao ar livre / marco para observar de passagem', bestTime: 'Qualquer horário — a inclinação é mais impressionante vista da rodovia',
+      description: 'Conhecida como a "Torre Inclinada de Abu Dhabi", este arranha-céu de 160 metros se inclina 18 graus para o oeste — mais de quatro vezes a inclinação da torre de Pisa.',
+      history: 'Concluída em 2011 e projetada pela RMJM, a Capital Gate foi construída com uma estrutura diagrid e uma fundação de 490 estacas para alcançar sua inclinação extrema com segurança, o que lhe rendeu um recorde no Guinness como a torre artificial mais inclinada do mundo.',
+      funFacts: [
+        'O Guinness World Records a certificou como a torre artificial mais inclinada do mundo.',
+        'Sua inclinação de 18 graus é mais de quatro vezes maior que a da Torre de Pisa.',
+        'Abriga o hotel Andaz Capital Gate, incluindo uma piscina em balanço no 19º andar.'
+      ]
+    }
+  },
+  {
+    id: 'wtc-abu-dhabi', category: 'landmarks-shopping', icon: 'corporate_fare', lat: 24.487722, lng: 54.357167,
+    address: 'Hamdan Bin Mohammed St, Abu Dhabi', image: "images/Building-wtc.jpg",
+    en: {
+      name: 'World Trade Center Abu Dhabi',
+      hours: 'Mall typically 10:00 AM–10:00 PM; towers not open to the public', price: 'Free entry (mall)', climateNote: 'Mostly indoor (mall) / drive-by landmark (towers)', bestTime: 'Evening',
+      description: "A Foster + Partners-designed complex anchored by the Burj Mohammed bin Rashid, Abu Dhabi's tallest building, with a souk-inspired mall at its base.",
+      history: 'Construction began in 2007 and was completed in 2014 after being delayed by the global financial crisis; the complex was originally planned with three towers, but only two were built.',
+      funFacts: [
+        'The Burj Mohammed bin Rashid tower is Abu Dhabi\'s tallest building at 382 metres.',
+        "The mall's design draws on the layout of a traditional Arabian souk.",
+        'It was designed by Foster + Partners, the architecture firm behind several other Abu Dhabi landmarks.'
+      ]
+    },
+    pt: {
+      name: 'World Trade Center Abu Dhabi',
+      hours: 'Shopping normalmente 10h–22h; torres não abertas ao público', price: 'Entrada gratuita (shopping)', climateNote: 'Majoritariamente coberto (shopping) / marco para observar de passagem (torres)', bestTime: 'Noite',
+      description: 'Um complexo projetado pela Foster + Partners, ancorado pela Burj Mohammed bin Rashid, o edifício mais alto de Abu Dhabi, com um shopping inspirado em um souk na base.',
+      history: 'A construção começou em 2007 e foi concluída em 2014, após atrasos causados pela crise financeira global; o complexo foi originalmente planejado com três torres, mas apenas duas foram construídas.',
+      funFacts: [
+        'A torre Burj Mohammed bin Rashid é o edifício mais alto de Abu Dhabi, com 382 metros.',
+        'O design do shopping se inspira no layout de um souk árabe tradicional.',
+        'Foi projetado pela Foster + Partners, o mesmo escritório de arquitetura por trás de outros marcos de Abu Dhabi.'
+      ]
+    }
+  },
+  {
+    id: 'al-bahr-towers', category: 'landmarks-shopping', icon: 'corporate_fare', lat: 24.4655, lng: 54.3985,
+    address: 'Al Salam Street, Abu Dhabi', image: "images/building-al-bahr-tower.jpg",
+    en: {
+      name: 'Al Bahr Towers',
+      hours: 'Exterior viewable anytime; not open to the public inside', price: 'Free to view from outside', climateNote: 'Outdoor / drive-by landmark', bestTime: "Midday — best time to see the shading screens open and close",
+      description: "Twin office towers famous for the world's largest computerized dynamic facade — a mashrabiya-inspired lattice of over 2,000 screens that open and close with the sun.",
+      history: 'Completed in 2012 and designed by Aedas, Al Bahr Towers reinterprets the traditional Islamic mashrabiya lattice screen as a responsive, computer-controlled shading system, cutting solar gain by up to 50% and earning a LEED Silver rating.',
+      funFacts: [
+        "The facade uses over 2,000 umbrella-like units that open and close automatically based on the sun's position.",
+        'It was one of the first large-scale buildings in the world with a fully dynamic, responsive facade.',
+        'The towers house the Abu Dhabi Investment Council and Al Hilal Bank headquarters.'
+      ]
+    },
+    pt: {
+      name: 'Al Bahr Towers',
+      hours: 'Exterior visível a qualquer hora; interior não é aberto ao público', price: 'Gratuito para ver por fora', climateNote: 'Ao ar livre / marco para observar de passagem', bestTime: 'Meio-dia — melhor horário para ver as telas de sombreamento abrindo e fechando',
+      description: 'Torres gêmeas de escritórios famosas por terem a maior fachada dinâmica computadorizada do mundo — uma treliça inspirada na mashrabiya, com mais de 2.000 telas que abrem e fecham conforme o sol.',
+      history: 'Concluídas em 2012 e projetadas pela Aedas, as Al Bahr Towers reinterpretam a tradicional treliça islâmica mashrabiya como um sistema de sombreamento responsivo e controlado por computador, reduzindo o ganho solar em até 50% e conquistando a certificação LEED Prata.',
+      funFacts: [
+        'A fachada usa mais de 2.000 unidades em formato de guarda-chuva que abrem e fecham automaticamente conforme a posição do sol.',
+        'Foi um dos primeiros grandes edifícios do mundo com uma fachada totalmente dinâmica e responsiva.',
+        'As torres abrigam as sedes do Conselho de Investimentos de Abu Dhabi e do Al Hilal Bank.'
+      ]
+    }
+  },
   // ---------- Adventure & Desert ----------
   {
     id: 'desert-safari', category: 'adventure', icon: 'landscape', lat: 23.1333, lng: 53.7833,
