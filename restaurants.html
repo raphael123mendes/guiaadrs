@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abu Dhabi Family Explorer — Restaurants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@500;600&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Shared theme tokens (same file index.html / attraction.html use) -->
+<script src="theme.js"></script>
+<script>
+  // Apply theme before paint to avoid a flash of the wrong colors.
+  applyTheme(getTheme());
+  tailwind.config = AD_THEME_CONFIG;
+</script>
+
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  body { font-family: 'Hanken Grotesk', sans-serif; }
+  .glass-card {
+    background: var(--glass-fill);
+    border: 1px solid var(--glass-stroke);
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(10px);
+  }
+  .chip {
+    border: 1px solid rgb(var(--color-outline-variant));
+    color: rgb(var(--color-on-surface-variant));
+    transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .chip[data-active="true"] {
+    background-color: var(--chip-active-bg);
+    color: var(--chip-active-fg);
+    border-color: var(--chip-active-bg);
+  }
+  select.chip { color: rgb(var(--color-on-surface)); }
+  .price-dot { width: 6px; height: 6px; border-radius: 9999px; }
+  ::-webkit-scrollbar { height: 6px; width: 6px; }
+  ::-webkit-scrollbar-thumb { background: rgb(var(--color-outline-variant)); border-radius: 9999px; }
+</style>
+</head>
+<body class="bg-background text-on-surface min-h-screen transition-colors duration-300">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-30 bg-background/90 backdrop-blur border-b border-outline-variant">
+    <div class="max-w-[1200px] mx-auto px-md md:px-xl py-md flex items-center justify-between gap-md">
+      <div class="flex items-center gap-sm">
+        <span class="material-symbols-outlined text-soft-gold" style="font-size:26px">restaurant</span>
+        <div>
+          <p class="font-display-lg text-headline-sm text-on-surface leading-none">Where to Eat</p>
+          <p class="font-label-sm text-on-surface-variant uppercase tracking-wide mt-1">Abu Dhabi Family Explorer</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-md">
+        <a href="index.html" class="hidden sm:flex items-center gap-1 font-body-md text-on-surface-variant hover:text-soft-gold transition-colors">
+          <span class="material-symbols-outlined" style="font-size:20px">arrow_back</span>
+          Attractions
+        </a>
+        <button id="theme-toggle" class="flex items-center justify-center w-10 h-10 rounded-full glass-card hover:border-soft-gold transition-colors" title="Toggle light/dark mode" aria-label="Toggle light/dark mode">
+          <span class="material-symbols-outlined text-on-surface-variant" id="theme-toggle-icon">light_mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="max-w-[1200px] mx-auto px-md md:px-xl pt-xl pb-lg">
+    <p class="font-display-lg-mobile md:font-display-lg text-on-surface max-w-xl">Restaurants worth the drive.</p>
+    <p class="font-body-lg text-on-surface-variant max-w-lg mt-sm">From Michelin tables to the neighborhood shawarma window — filter by what the evening calls for.</p>
+  </section>
+
+  <!-- Controls -->
+  <section class="max-w-[1200px] mx-auto px-md md:px-xl pb-md">
+    <div class="w-full relative flex items-center glass-card rounded-xl p-2 focus-within:border-soft-gold transition-all mb-md max-w-2xl">
+      <span class="material-symbols-outlined text-on-surface-variant ml-3">search</span>
+      <input
+        class="w-full bg-transparent border-none focus:ring-0 font-body-md text-on-surface py-2 px-3 placeholder-on-surface-variant"
+        id="search-input" type="text" placeholder="Search by name or cuisine…">
+    </div>
+
+    <div class="flex flex-wrap gap-sm mb-sm" id="occasion-chips"></div>
+
+    <div class="flex flex-wrap gap-sm">
+      <select id="cuisine-filter" class="chip rounded-lg bg-surface-container font-body-md px-3 py-2 cursor-pointer"></select>
+      <select id="price-filter" class="chip rounded-lg bg-surface-container font-body-md px-3 py-2 cursor-pointer"></select>
+    </div>
+  </section>
+
+  <div class="max-w-[1200px] mx-auto px-md md:px-xl">
+    <p class="font-label-sm uppercase tracking-wide text-on-surface-variant" id="results-count"></p>
+  </div>
+
+  <main class="max-w-[1200px] mx-auto px-md md:px-xl py-md">
+    <div id="restaurant-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md"></div>
+    <div id="empty-state" class="hidden flex-col items-center text-center py-xxl gap-sm">
+      <span class="material-symbols-outlined text-on-surface-variant" style="font-size:40px">no_meals</span>
+      <p class="font-body-lg text-on-surface-variant">Nothing matches those filters.</p>
+      <button id="clear-filters" class="font-label-lg text-soft-gold uppercase tracking-wide mt-1">Clear filters</button>
+    </div>
+  </main>
+
+  <div id="modal-backdrop" class="hidden fixed inset-0 bg-black/60 z-40 items-center justify-center p-md">
+    <div id="modal-card" class="glass-card rounded-xl max-w-lg w-full p-lg relative bg-surface-container-lowest">
+      <button id="modal-close" class="absolute top-4 right-4 text-on-surface-variant hover:text-soft-gold">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+<script src="restaurants-data.js"></script>
+<script>
+  const CATEGORY_LABELS = restaurantCategories;
+  const OCCASION_LABELS = { fineDining: 'Fine Dining', casual: 'Casual', mustTry: 'Must-Try', family: 'Family', couples: 'Couples' };
+  const OCCASION_ICONS = { fineDining: 'star', casual: 'lunch_dining', mustTry: 'local_fire_department', family: 'family_restroom', couples: 'favorite' };
+
+  let activeOccasion = 'all';
+  let activeCuisine = 'all';
+  let activePrice = 'all';
+  let searchTerm = '';
+
+  function refreshThemeIcon() {
+    document.getElementById('theme-toggle-icon').textContent = getTheme() === 'light' ? 'dark_mode' : 'light_mode';
+  }
+  document.getElementById('theme-toggle').addEventListener('click', () => {
+    const next = getTheme() === 'light' ? 'dark' : 'light';
+    setTheme(next);
+    applyTheme(next);
+    refreshThemeIcon();
+  });
+  refreshThemeIcon();
+
+  function priceBucket(priceStr) {
+    const nums = (priceStr.match(/\d+/g) || []).map(Number);
+    const low = nums[0] || 0;
+    if (low >= 300) return 'splurge';
+    if (low >= 100) return 'mid';
+    return 'budget';
+  }
+  const PRICE_LABELS = { budget: 'AED < 100pp', mid: 'AED 100–300pp', splurge: 'AED 300pp+' };
+
+  function buildControls() {
+    const chipWrap = document.getElementById('occasion-chips');
+    const allChip = document.createElement('button');
+    allChip.className = 'chip rounded-full px-4 py-2 font-label-lg';
+    allChip.textContent = 'All';
+    allChip.dataset.active = 'true';
+    allChip.onclick = () => setOccasion('all');
+    chipWrap.appendChild(allChip);
+
+    Object.keys(OCCASION_LABELS).forEach(key => {
+      const btn = document.createElement('button');
+      btn.className = 'chip rounded-full px-4 py-2 font-label-lg flex items-center gap-1';
+      btn.innerHTML = `<span class="material-symbols-outlined" style="font-size:16px">${OCCASION_ICONS[key]}</span> ${OCCASION_LABELS[key]}`;
+      btn.dataset.active = 'false';
+      btn.dataset.key = key;
+      btn.onclick = () => setOccasion(key);
+      chipWrap.appendChild(btn);
+    });
+
+    const cuisines = [...new Set(restaurants.map(r => r.cuisine))].sort();
+    const cuisineSel = document.getElementById('cuisine-filter');
+    cuisineSel.innerHTML = `<option value="all">All cuisines</option>` +
+      cuisines.map(c => `<option value="${c}">${c}</option>`).join('');
+    cuisineSel.onchange = e => { activeCuisine = e.target.value; render(); };
+
+    const priceSel = document.getElementById('price-filter');
+    priceSel.innerHTML = `<option value="all">Any price</option>` +
+      Object.entries(PRICE_LABELS).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
+    priceSel.onchange = e => { activePrice = e.target.value; render(); };
+
+    document.getElementById('search-input').addEventListener('input', e => {
+      searchTerm = e.target.value.trim().toLowerCase();
+      render();
+    });
+
+    document.getElementById('clear-filters').onclick = () => {
+      activeOccasion = 'all'; activeCuisine = 'all'; activePrice = 'all'; searchTerm = '';
+      document.getElementById('search-input').value = '';
+      cuisineSel.value = 'all'; priceSel.value = 'all';
+      setOccasion('all');
+    };
+  }
+
+  function setOccasion(key) {
+    activeOccasion = key;
+    document.querySelectorAll('#occasion-chips button').forEach(b => {
+      b.dataset.active = (key === 'all' && !b.dataset.key) || b.dataset.key === key ? 'true' : 'false';
+    });
+    render();
+  }
+
+  function getFiltered() {
+    return restaurants.filter(r => {
+      if (activeOccasion !== 'all' && !r.occasion.includes(activeOccasion)) return false;
+      if (activeCuisine !== 'all' && r.cuisine !== activeCuisine) return false;
+      if (activePrice !== 'all' && priceBucket(r.price) !== activePrice) return false;
+      if (searchTerm && !(r.name.toLowerCase().includes(searchTerm) || r.cuisine.toLowerCase().includes(searchTerm))) return false;
+      return true;
+    });
+  }
+
+  function card(r) {
+    const bucket = priceBucket(r.price);
+    const dots = bucket === 'budget' ? 1 : bucket === 'mid' ? 2 : 3;
+    const dotsHtml = Array.from({ length: 3 }, (_, i) =>
+      `<span class="price-dot ${i < dots ? 'bg-soft-gold' : 'bg-outline-variant'}"></span>`).join('');
+
+    const div = document.createElement('div');
+    div.className = 'glass-card rounded-xl p-md flex flex-col justify-between cursor-pointer hover:border-soft-gold transition-colors';
+    div.innerHTML = `
+      <div>
+        <div class="flex items-start justify-between gap-sm mb-1">
+          <p class="font-headline-sm text-on-surface leading-snug">${r.name}</p>
+          <div class="flex gap-1 pt-1 shrink-0">${dotsHtml}</div>
+        </div>
+        <p class="font-label-sm uppercase tracking-wide text-soft-gold mb-sm">${r.cuisine} · ${CATEGORY_LABELS[r.category]}</p>
+        <p class="font-body-md text-on-surface-variant line-clamp-2">${r.notes}</p>
+      </div>
+      <div class="flex items-center gap-1 mt-md font-body-md text-on-surface-variant">
+        <span class="material-symbols-outlined" style="font-size:18px">place</span>
+        <span class="truncate">${r.address}</span>
+      </div>`;
+    div.onclick = () => openModal(r);
+    return div;
+  }
+
+  function render() {
+    const grid = document.getElementById('restaurant-grid');
+    const empty = document.getElementById('empty-state');
+    const list = getFiltered();
+    grid.innerHTML = '';
+    document.getElementById('results-count').textContent = `${list.length} restaurant${list.length === 1 ? '' : 's'}`;
+
+    if (list.length === 0) {
+      grid.classList.add('hidden');
+      empty.classList.remove('hidden');
+      empty.classList.add('flex');
+    } else {
+      grid.classList.remove('hidden');
+      empty.classList.add('hidden');
+      empty.classList.remove('flex');
+      list.forEach(r => grid.appendChild(card(r)));
+    }
+  }
+
+  function openModal(r) {
+    const bucket = priceBucket(r.price);
+    const dots = bucket === 'budget' ? 1 : bucket === 'mid' ? 2 : 3;
+    const dotsHtml = Array.from({ length: 3 }, (_, i) =>
+      `<span class="price-dot ${i < dots ? 'bg-soft-gold' : 'bg-outline-variant'}"></span>`).join('');
+    const occasionTags = r.occasion.map(o => `<span class="chip rounded-full px-3 py-1 font-label-sm" data-active="true">${OCCASION_LABELS[o]}</span>`).join(' ');
+
+    document.getElementById('modal-content').innerHTML = `
+      <p class="font-label-sm uppercase tracking-wide text-soft-gold mb-1">${r.cuisine} · ${CATEGORY_LABELS[r.category]}</p>
+      <p class="font-display-lg-mobile text-on-surface mb-sm">${r.name}</p>
+      <div class="flex gap-1 mb-md items-center">${dotsHtml}<span class="font-body-md text-on-surface-variant ml-2">${r.price}</span></div>
+      <p class="font-body-lg text-on-surface mb-md">${r.notes}</p>
+      <div class="flex items-start gap-2 font-body-md text-on-surface-variant mb-2">
+        <span class="material-symbols-outlined" style="font-size:20px">place</span>
+        <span>${r.address}</span>
+      </div>
+      <div class="flex items-start gap-2 font-body-md text-on-surface-variant mb-md">
+        <span class="material-symbols-outlined" style="font-size:20px">language</span>
+        <span>${r.website}</span>
+      </div>
+      <div class="flex flex-wrap gap-1">${occasionTags}</div>`;
+    document.getElementById('modal-backdrop').classList.remove('hidden');
+    document.getElementById('modal-backdrop').classList.add('flex');
+  }
+
+  document.getElementById('modal-close').onclick = closeModal;
+  document.getElementById('modal-backdrop').addEventListener('click', e => {
+    if (e.target.id === 'modal-backdrop') closeModal();
+  });
+  function closeModal() {
+    document.getElementById('modal-backdrop').classList.add('hidden');
+    document.getElementById('modal-backdrop').classList.remove('flex');
+  }
+
+  buildControls();
+  render();
+</script>
+</body>
+</html>
