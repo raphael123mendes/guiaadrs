@@ -62,6 +62,9 @@
     </li>
     <!-- category items injected by JS -->
   </ul>
+  <a class="flex items-center gap-md p-3 text-on-surface-variant hover:text-soft-gold rounded-lg transition-all" href="restaurants.html">
+    <span class="material-symbols-outlined">restaurant</span> <span id="sidebar-restaurants-label">Restaurants</span>
+  </a>
   <a class="mt-md flex items-center gap-md p-3 text-on-surface-variant hover:text-soft-gold rounded-lg transition-all" href="#" id="side-nav-map-toggle">
     <span class="material-symbols-outlined">map</span> <span id="sidebar-map-label">Full Map</span>
   </a>
@@ -84,6 +87,7 @@
           <span class="relative z-10 px-3 py-0.5 text-xs font-semibold transition-colors" id="lang-pt-mobile">PT</span>
         </div>
         <button class="material-symbols-outlined text-on-surface-variant" id="theme-toggle-mobile" title="Toggle light/dark mode" aria-label="Toggle light/dark mode">light_mode</button>
+        <a class="material-symbols-outlined text-on-surface-variant" href="restaurants.html" title="Restaurants" aria-label="Restaurants">restaurant</a>
         <button class="material-symbols-outlined text-on-surface-variant" id="fab-map-toggle-mobile-icon">map</button>
       </div>
     </div>
@@ -367,6 +371,7 @@
     document.getElementById('sidebar-tagline').textContent = t('tagline');
     document.getElementById('sidebar-all-label').textContent = t('allPlaces');
     document.getElementById('sidebar-map-label').textContent = t('fullMap');
+    document.getElementById('sidebar-restaurants-label').textContent = getLang() === 'pt' ? 'Restaurantes' : 'Restaurants';
     document.getElementById('sidebar-note').textContent = t('sidebarNote');
     document.getElementById('discover-title').textContent = t('discoverTitle');
     document.getElementById('discover-subtitle').textContent = t('discoverSubtitle');
