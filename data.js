@@ -965,6 +965,265 @@ const ATTRACTIONS = [
       funFacts: ['Um dos primeiros bairros do mundo construído em torno de cápsulas de transporte pessoal autônomas.']
     }
   },
+  // New entries to merge into the ATTRACTIONS array in data.js
+// "Best Shopping for Bargains" cluster — bilingual (en/pt), matching the
+// existing schema: top-level id/category/icon/lat/lng/address/image,
+// with translated fields inside en: {} and pt: {} blocks.
+
+{
+  id: 'al-wahda-mall-bargains', category: 'landmarks-shopping', icon: 'storefront',
+  lat: 24.4764, lng: 54.3705, address: 'Al Wahda St, Al Nahyan, Abu Dhabi', image: null,
+  en: {
+    name: 'Al Wahda Mall',
+    hours: 'Daily 10:00 AM–10:00 PM (later on weekends)',
+    price: 'Free to browse; bargain finds throughout',
+    climateNote: 'Fully indoor', bestTime: 'Weekday afternoons (less crowded)',
+    description: 'A mid-range mall known for affordable fashion, budget-friendly high-street brands, and a strong mix of Asian and international stores. Home to Brands4u Outlet and a LuLu Hypermarket.',
+    history: "One of Abu Dhabi's longer-running malls, popular with residents for everyday shopping rather than luxury browsing.",
+    funFacts: [
+      'Brands4u Outlet inside the mall carries Lacoste, CK, and Mont Blanc at outlet prices, with regular surprise price drops.',
+      'The attached LuLu Hypermarket is a reliable stop for cheap groceries and household goods.'
+    ]
+  },
+  pt: {
+    name: 'Al Wahda Mall',
+    hours: 'Diariamente, 10h–22h (mais tarde nos fins de semana)',
+    price: 'Entrada gratuita; boas pechinchas por todo o shopping',
+    climateNote: 'Totalmente coberto', bestTime: 'Tardes de dia útil (menos movimento)',
+    description: 'Um shopping de faixa intermediária conhecido por moda acessível, marcas populares de bom custo-benefício e uma forte mistura de lojas asiáticas e internacionais. Abriga o Brands4u Outlet e um hipermercado LuLu.',
+    history: 'Um dos shoppings mais antigos de Abu Dhabi, popular entre moradores para compras do dia a dia, não voltado ao luxo.',
+    funFacts: [
+      'O Brands4u Outlet dentro do shopping vende Lacoste, CK e Mont Blanc a preços de outlet, com quedas de preço surpresa regulares.',
+      'O hipermercado LuLu anexo é uma boa opção para mantimentos e itens domésticos baratos.'
+    ]
+  }
+},
+
+{
+  id: 'reem-mall-bargains', category: 'landmarks-shopping', icon: 'storefront',
+  lat: 24.4883, lng: 54.3993, address: 'Al Reem Island, Abu Dhabi (RR1, Abdullah Omran Taryam St)', image: null,
+  en: {
+    name: 'Reem Mall — Bargain Cluster',
+    hours: 'Daily 10:00 AM–12:00 AM',
+    price: 'Free to browse; off-price stores throughout',
+    climateNote: 'Fully indoor', bestTime: 'Weekday mornings/early afternoon',
+    description: "One of Abu Dhabi's newer mega-malls (400+ stores), with a strong cluster of value and off-price fashion retailers on the ground and second floors — good for a dedicated bargain run rather than luxury shopping.",
+    history: 'Opened in 2023 as one of the largest retail developments in the capital, including "Snow Abu Dhabi," the city\'s first indoor snow park.',
+    funFacts: [
+      'Brands For Less sits on the ground floor beside Danube, offering up to 80% off designer fashion and homeware.',
+      'R&B, a fast-growing value fashion chain from the region, has one of its newer branches here.'
+    ]
+  },
+  pt: {
+    name: 'Reem Mall — Polo de Pechinchas',
+    hours: 'Diariamente, 10h–00h',
+    price: 'Entrada gratuita; lojas de desconto por todo o shopping',
+    climateNote: 'Totalmente coberto', bestTime: 'Manhãs/início da tarde em dias úteis',
+    description: 'Um dos mega shoppings mais novos de Abu Dhabi (mais de 400 lojas), com um forte grupo de lojas de moda de valor e desconto no térreo e segundo andar — ótimo para uma ida dedicada a pechinchas, não a compras de luxo.',
+    history: 'Inaugurado em 2023 como um dos maiores empreendimentos de varejo da capital, incluindo o "Snow Abu Dhabi", o primeiro parque de neve coberto da cidade.',
+    funFacts: [
+      'A Brands For Less fica no térreo ao lado da Danube, com até 80% de desconto em moda de grife e itens para casa.',
+      'A R&B, uma rede de moda de valor em rápida expansão na região, tem uma de suas lojas mais novas aqui.'
+    ]
+  }
+},
+
+{
+  id: 'madinat-zayed-gold-souk', category: 'landmarks-shopping', icon: 'storefront',
+  lat: 24.4886, lng: 54.3667, address: '438 Muroor Rd, Al Danah, Abu Dhabi', image: null,
+  en: {
+    name: 'Madinat Zayed Shopping & Gold Centre',
+    hours: 'Mon–Thu 9:00 AM–11:00 PM · Fri–Sun 9:00 AM–12:00 AM',
+    price: 'Free to browse; gold priced daily by market rate',
+    climateNote: 'Fully indoor', bestTime: 'Morning for calmer gold-shop browsing and negotiation',
+    description: "A local, largely non-touristy shopping centre (400+ shops) built around the Gold Souk — roughly 70 jewellery shops selling gold, diamonds, and pearls, alongside abaya boutiques, perfumeries, textiles, and a LuLu Hypermarket.",
+    history: "Long-standing part of Abu Dhabi's retail landscape, managed by the LuLu Group, historically serving the city's expat and local working population more than tourists.",
+    funFacts: [
+      "Prices here are often considered cheaper and more negotiable than Dubai's Gold Souk.",
+      'The centre is connected to a LuLu Hypermarket, useful for groceries or a quick bite between gold-shop browsing.'
+    ]
+  },
+  pt: {
+    name: 'Madinat Zayed Shopping & Gold Centre',
+    hours: 'Seg–qui 9h–23h · Sex–dom 9h–00h',
+    price: 'Entrada gratuita; ouro precificado diariamente pela cotação de mercado',
+    climateNote: 'Totalmente coberto', bestTime: 'Manhã, para negociar com mais calma nas joalherias',
+    description: 'Um centro de compras local, pouco turístico (mais de 400 lojas) construído em torno do Gold Souk — cerca de 70 joalherias vendendo ouro, diamantes e pérolas, além de lojas de abaya, perfumarias, tecidos e um hipermercado LuLu.',
+    history: 'Parte histórica do comércio de Abu Dhabi, administrado pelo Grupo LuLu, tradicionalmente voltado para expatriados e trabalhadores locais mais do que turistas.',
+    funFacts: [
+      'Os preços aqui costumam ser considerados mais baratos e negociáveis do que no Gold Souk de Dubai.',
+      'O centro é conectado a um hipermercado LuLu, útil para compras de mercado ou um lanche rápido entre uma joalheria e outra.'
+    ]
+  }
+},
+
+{
+  id: 'mina-port-bargain-shops', category: 'landmarks-shopping', icon: 'storefront',
+  lat: 24.5089, lng: 54.3775, address: 'Mina Zayed (Port Area), Abu Dhabi', image: null,
+  en: {
+    name: 'Mina Zayed Port — Dollar & Gift Shops',
+    hours: 'Daily, morning through evening',
+    price: 'Very low — fixed-price/dollar-store model',
+    climateNote: 'Mix of indoor stalls and covered walkways', bestTime: 'Any time; less crowded on weekday mornings',
+    description: 'A cluster of budget fixed-price shops (like OneToTen) scattered through the Mina Zayed port area, selling household items, gifts, toys, and daily necessities at very low prices — a genuinely local, non-touristy stop.',
+    history: "Grown organically alongside Mina Zayed's long-running produce, fish, and date markets, serving the trading community and nearby residents.",
+    funFacts: [
+      'OneToTen-style shops price most items in a fixed low range, similar to a dollar store.',
+      'Sits within walking distance of the fruit/veg souq, fish market, and Liwa Dates Store, so it pairs naturally into one port visit.'
+    ]
+  },
+  pt: {
+    name: 'Porto de Mina Zayed — Lojas de Um Dólar e Presentes',
+    hours: 'Diariamente, de manhã até a noite',
+    price: 'Muito baixo — modelo de preço fixo, estilo "loja de um dólar"',
+    climateNote: 'Mistura de barracas cobertas e passagens abertas', bestTime: 'Qualquer horário; menos movimento em manhãs de dia útil',
+    description: 'Um conjunto de lojas de preço fixo e baixo (como a OneToTen) espalhadas pela área do porto de Mina Zayed, vendendo itens domésticos, presentes, brinquedos e itens do dia a dia a preços muito baixos — um lugar genuinamente local e pouco turístico.',
+    history: 'Cresceu organicamente ao lado dos tradicionais mercados de hortifrúti, peixe e tâmaras de Mina Zayed, atendendo a comunidade comerciante e moradores próximos.',
+    funFacts: [
+      'Lojas no estilo OneToTen precificam a maioria dos itens numa faixa fixa e baixa, como uma "loja de um dólar".',
+      'Fica a poucos passos do mercado de hortifrúti, do mercado de peixe e da Liwa Dates Store, então combina bem com uma visita única ao porto.'
+    ]
+  }
+},
+
+{
+  id: 'gift-land-najda', category: 'landmarks-shopping', icon: 'redeem',
+  lat: 24.4926, lng: 54.3721, address: 'Najda St, Abu Dhabi', image: null,
+  en: {
+    name: 'Gift Land',
+    hours: 'Daily, typical retail hours (confirm current hours on-site)',
+    price: 'Budget-friendly',
+    climateNote: 'Indoor', bestTime: 'Any time',
+    description: 'A straightforward gift and novelty shop on Najda Street — a reliable, no-frills stop for affordable gifts, party items, and small souvenirs away from the mall crowds.',
+    history: "Part of Najda Street's long-running strip of independent retail shops, a street known locally for practical, affordable shopping rather than luxury brands.",
+    funFacts: ["Najda St is one of the city's older commercial strips, popular with residents for exactly this kind of independent shop."]
+  },
+  pt: {
+    name: 'Gift Land',
+    hours: 'Diariamente, horário comercial padrão (confirme no local)',
+    price: 'Preços acessíveis',
+    climateNote: 'Coberto', bestTime: 'Qualquer horário',
+    description: 'Uma loja de presentes e artigos variados simples e direta na Najda Street — uma parada confiável e sem frescura para presentes baratos, itens de festa e pequenas lembranças, longe da movimentação dos shoppings.',
+    history: 'Parte da tradicional faixa de lojas independentes da Najda Street, uma rua conhecida localmente por compras práticas e acessíveis, não por marcas de luxo.',
+    funFacts: ['A Najda St é uma das faixas comerciais mais antigas da cidade, popular entre moradores justamente por esse tipo de loja independente.']
+  }
+},
+
+{
+  id: 'adidas-outlet-mazyad', category: 'landmarks-shopping', icon: 'storefront',
+  lat: 24.4667, lng: 54.3667, address: 'Mazyad St, Abu Dhabi', image: null,
+  en: {
+    name: 'Adidas Outlet Store — Mazyad Street',
+    hours: 'Daily, typical retail hours (confirm current hours on-site)',
+    price: 'Outlet pricing — discounted from retail',
+    climateNote: 'Indoor', bestTime: 'Any time',
+    description: 'A dedicated Adidas outlet store on Mazyad Street offering discounted sportswear and footwear compared to full-price mall locations.',
+    history: 'Part of a small strip of standalone outlet-style stores along Mazyad Street, separate from the big shopping malls.',
+    funFacts: ['Standalone outlet stores like this often carry past-season stock at deeper discounts than mall counterparts.']
+  },
+  pt: {
+    name: 'Adidas Outlet Store — Mazyad Street',
+    hours: 'Diariamente, horário comercial padrão (confirme no local)',
+    price: 'Preço de outlet — com desconto em relação ao varejo',
+    climateNote: 'Coberto', bestTime: 'Qualquer horário',
+    description: 'Uma loja outlet exclusiva da Adidas na Mazyad Street, com roupas esportivas e calçados com desconto em comparação às lojas de shopping em preço cheio.',
+    history: 'Parte de uma pequena faixa de lojas outlet independentes na Mazyad Street, separada dos grandes shoppings.',
+    funFacts: ['Lojas outlet independentes como essa costumam ter estoque de temporadas passadas com descontos ainda maiores que as unidades de shopping.']
+  }
+},
+{
+  id: 'childrens-library', category: 'culture-heritage', icon: 'auto_stories',
+  lat: 24.4864, lng: 54.3540,
+  address: 'Cultural Foundation, Sheikh Rashid Bin Saeed Al Maktoum St, Al Hosn, Abu Dhabi',
+  image: null,
+  en: {
+    name: "Abu Dhabi Children's Library",
+    hours: 'Sat–Thu 9:00 AM–8:00 PM · Fri 2:00 PM–8:00 PM',
+    price: 'Free (registration required to borrow books)',
+    climateNote: 'Fully indoor', bestTime: 'Late afternoon',
+    description: "A three-floor, 5,250 sqm children's library at the Cultural Foundation next to Qasr Al Hosn, built around immersive, age-appropriate play-and-read spaces inspired by UAE landscapes.",
+    history: "Opened in 2019 as part of the master plan reinstating Qasr Al Hosn as Abu Dhabi's cultural heart, integrated into the historic Cultural Foundation building.",
+    funFacts: [
+      'Features a central "Book Mountain" and a reading dune modeled on desert sand.',
+      'One floor has an oasis-themed space with a falaj (water channel) design flowing past the bookshelves.'
+    ]
+  },
+  pt: {
+    name: 'Biblioteca Infantil de Abu Dhabi',
+    hours: 'Sáb–qui 9h–20h · Sex 14h–20h',
+    price: 'Gratuito (cadastro necessário para emprestar livros)',
+    climateNote: 'Totalmente coberto', bestTime: 'Final da tarde',
+    description: 'Uma biblioteca infantil de três andares e 5.250 m² na Cultural Foundation, ao lado do Qasr Al Hosn, construída em torno de espaços imersivos de leitura e brincadeira inspirados nas paisagens dos Emirados.',
+    history: 'Inaugurada em 2019 como parte do plano diretor que devolveu ao Qasr Al Hosn seu papel de coração cultural de Abu Dhabi, integrada ao histórico prédio da Cultural Foundation.',
+    funFacts: [
+      'Tem uma "Montanha de Livros" central e uma duna de leitura inspirada nas dunas do deserto.',
+      'Um dos andares tem um espaço temático de oásis, com um desenho de falaj (canal de água) passando pelas estantes.'
+    ]
+  }
+},
+
+{
+  id: 'emirates-park-zoo', category: 'nature', icon: 'pets',
+  lat: 24.6167, lng: 54.6167,
+  address: '12th Street, Al Bahia, Abu Dhabi',
+  image: null,
+  en: {
+    name: 'Emirates Park Zoo & Resort',
+    hours: 'Daily 9:00 AM–8:00 PM (confirm current show times)',
+    price: 'From AED 40 (single entry); activity bundles and VIP experiences extra',
+    climateNote: 'Mostly outdoor, some indoor exhibits', bestTime: 'Morning (cooler, animals more active; catch early shows)',
+    description: 'An 80-acre wildlife park in Al Bahia, about 30 minutes from downtown and 10–15 minutes from Yas Island, home to well over 1,000 animals across zones like the Petting Zoo, Bird Park, Reptile House, and Wildlife Park.',
+    history: 'Opened in 2008 as a small feeding farm and expanded into a full zoo by 2012; now AZA-accredited and a WAZA member, reflecting international animal welfare standards.',
+    funFacts: [
+      'The only AZA-accredited zoo in the Middle East.',
+      'Offers VIP animal-dining experiences, including breakfast with giraffes or parrots.'
+    ]
+  },
+  pt: {
+    name: 'Emirates Park Zoo & Resort',
+    hours: 'Diariamente 9h–20h (confirme os horários dos shows)',
+    price: 'A partir de AED 40 (entrada avulsa); pacotes de atividades e experiências VIP à parte',
+    climateNote: 'Majoritariamente ao ar livre, com algumas exposições cobertas', bestTime: 'Manhã (mais fresco, animais mais ativos; pegue os primeiros shows)',
+    description: 'Um parque de vida selvagem de 32 hectares em Al Bahia, cerca de 30 minutos do centro e 10–15 minutos da Yas Island, lar de mais de 1.000 animais em áreas como o zoológico de contato, o Parque das Aves, a Casa dos Répteis e o Parque da Vida Selvagem.',
+    history: 'Inaugurado em 2008 como uma pequena fazenda de alimentação e expandido para um zoológico completo até 2012; hoje é credenciado pela AZA e membro da WAZA, refletindo padrões internacionais de bem-estar animal.',
+    funFacts: [
+      'O único zoológico credenciado pela AZA no Oriente Médio.',
+      'Oferece experiências VIP de refeição com animais, incluindo café da manhã com girafas ou papagaios.'
+    ]
+  }
+},
+
+{
+  id: 'mina-port-market', category: 'landmarks-shopping', icon: 'storefront',
+  lat: 24.5089, lng: 54.3775,
+  address: 'Mina Zayed (Port Area), Abu Dhabi',
+  image: null,
+  en: {
+    name: 'Mina Zayed Fruit, Vegetable & Dates Market',
+    hours: 'Daily, early morning through evening (best 6:00–10:00 AM)',
+    price: 'Free to browse',
+    climateNote: 'Mostly outdoor/covered stalls', bestTime: 'Early morning',
+    description: "A working local souq at Abu Dhabi's old port, packed with stalls selling fresh produce and dozens of date varieties, alongside the adjacent fish market.",
+    history: "Part of Mina Zayed's traditional port trading area, long predating the city's modern malls, still run largely by local and expat traders rather than set up for tourists.",
+    funFacts: [
+      'Sits right next to the Mina Zayed Fish Market, where you can pick a fish and have it grilled at a nearby stall.',
+      'One of the best places in the city to sample and buy dates by the kilo, direct from traders.'
+    ]
+  },
+  pt: {
+    name: 'Mercado de Frutas, Verduras e Tâmaras de Mina Zayed',
+    hours: 'Diariamente, do início da manhã até a noite (melhor horário 6h–10h)',
+    price: 'Entrada gratuita',
+    climateNote: 'Majoritariamente ao ar livre/barracas cobertas', bestTime: 'Início da manhã',
+    description: 'Um souq local em pleno funcionamento no antigo porto de Abu Dhabi, cheio de barracas vendendo produtos frescos e dezenas de variedades de tâmaras, ao lado do mercado de peixe.',
+    history: 'Parte da tradicional área de comércio portuário de Mina Zayed, muito anterior aos shoppings modernos da cidade, ainda administrada majoritariamente por comerciantes locais e expatriados, não voltada para turistas.',
+    funFacts: [
+      'Fica bem ao lado do Mercado de Peixe de Mina Zayed, onde você pode escolher um peixe e pedir para grelhar numa barraca próxima.',
+      'Um dos melhores lugares da cidade para provar e comprar tâmaras por quilo, direto dos comerciantes.'
+    ]
+  }
+},
+
 ];
 
 const ATTRACTIONS_BY_ID = Object.fromEntries(ATTRACTIONS.map(a => [a.id, a]));

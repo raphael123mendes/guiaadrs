@@ -1,7 +1,12 @@
 // Abu Dhabi Restaurants Guide — data.js
 // Structure mirrors the attractions page. Each restaurant has:
-// id, name, cuisine, category (dining style), occasion tags, address, price, website
-// Prices are approximate per person in AED, gathered from public 2026 guides — confirm before publishing.
+// id, name, cuisine, category (primary dining style, for the label shown on card),
+// occasion (ARRAY of tags — a restaurant can belong to multiple: fineDining, casual,
+//   mustTry, family, couples — filtering already checks r.occasion.includes(tag),
+//   so one restaurant showing under multiple filters is fully supported),
+// michelin (string or null — '1 Star', 'Bib Gourmand', 'Selected', or null),
+// address, price, website, notes.
+// Prices/Michelin status gathered from public 2026 guides — confirm before publishing.
 
 const restaurantCategories = {
   fineDining: 'Fine Dining',
@@ -9,30 +14,44 @@ const restaurantCategories = {
   mustTry: 'Must-Try / Iconic',
   family: 'Family-Friendly',
   couples: 'Couples / Romantic',
+  bar: 'Bar / Pub',
+  business: 'Business Lunch',
 };
 
 const restaurants = [
 
-  // ---------- Fine Dining ----------
+  // ---------- Fine Dining (incl. all current Michelin-starred restaurants) ----------
+  {
+    id: 'erth', name: 'Erth',
+    cuisine: 'Emirati', category: 'fineDining', occasion: ['fineDining', 'mustTry', 'couples'],
+    michelin: '1 Star',
+    address: 'North Parking, Al Hosn, Qasr Al Hosn, Abu Dhabi',
+    price: 'AED 250–350 per person',
+    website: 'erthrestaurant.ae',
+    notes: 'The first Michelin-starred Emirati restaurant, held for three consecutive years. Sunken majlis-style dining inside the Qasr Al Hosn cultural site — lamb machboos, Liwa dates batheeta.',
+  },
   {
     id: 'talea-antonio-guida', name: 'Talea by Antonio Guida',
-    cuisine: 'Italian', category: 'fineDining', occasion: ['couples', 'mustTry'],
+    cuisine: 'Italian', category: 'fineDining', occasion: ['fineDining', 'couples', 'mustTry'],
+    michelin: '1 Star',
     address: 'Emirates Palace Mandarin Oriental, West Corniche Rd, Abu Dhabi',
     price: 'AED 350–500+ per person',
     website: 'mandarinoriental.com/abu-dhabi',
-    notes: 'Michelin-starred. "Cucina di Famiglia" by chef Antonio Guida — cacio e pepe made table-side. Book the terrace for sunset.',
+    notes: '"Cucina di Famiglia" by chef Antonio Guida — cacio e pepe made table-side. Book the terrace for sunset.',
   },
   {
     id: 'hakkasan-abu-dhabi', name: 'Hakkasan Abu Dhabi',
-    cuisine: 'Modern Chinese', category: 'fineDining', occasion: ['couples'],
+    cuisine: 'Modern Chinese', category: 'fineDining', occasion: ['fineDining', 'couples', 'mustTry'],
+    michelin: '1 Star',
     address: 'Emirates Palace Mandarin Oriental, West Corniche Rd, Abu Dhabi',
-    price: 'AED 400+ per person',
+    price: 'AED 400+ per person (tasting menu up to AED 538)',
     website: 'hakkasan.com',
-    notes: 'Michelin-starred. Opulent, dimly lit dining room — one of the most talked-about tables in the city.',
+    notes: 'Opulent, dimly lit dining room — one of the most talked-about tables in the city.',
   },
   {
     id: 'zuma-abu-dhabi', name: 'Zuma Abu Dhabi',
-    cuisine: 'Contemporary Japanese', category: 'fineDining', occasion: ['couples', 'mustTry'],
+    cuisine: 'Contemporary Japanese', category: 'fineDining', occasion: ['fineDining', 'couples'],
+    michelin: null,
     address: 'Nation Towers, Corniche Rd, Abu Dhabi',
     price: 'AED 400+ per person',
     website: 'zumarestaurant.com',
@@ -40,7 +59,8 @@ const restaurants = [
   },
   {
     id: 'coya-abu-dhabi', name: 'COYA Abu Dhabi',
-    cuisine: 'Peruvian', category: 'fineDining', occasion: ['couples'],
+    cuisine: 'Peruvian', category: 'fineDining', occasion: ['fineDining', 'couples'],
+    michelin: null,
     address: 'The St. Regis Abu Dhabi, Corniche Rd',
     price: 'AED 350–450 per person',
     website: 'coyarestaurant.com',
@@ -48,7 +68,8 @@ const restaurants = [
   },
   {
     id: 'oak-room', name: 'Oak Room',
-    cuisine: 'Steakhouse', category: 'fineDining', occasion: ['couples'],
+    cuisine: 'Steakhouse', category: 'fineDining', occasion: ['fineDining', 'couples'],
+    michelin: null,
     address: 'Abu Dhabi EDITION, Al Bateen',
     price: 'AED 400+ per person',
     website: 'editionhotels.com/abu-dhabi',
@@ -56,7 +77,8 @@ const restaurants = [
   },
   {
     id: 'li-beirut', name: 'Li Beirut',
-    cuisine: 'Lebanese', category: 'fineDining', occasion: ['couples', 'mustTry'],
+    cuisine: 'Lebanese', category: 'fineDining', occasion: ['fineDining', 'couples', 'mustTry'],
+    michelin: null,
     address: 'Conrad Abu Dhabi Etihad Towers, Corniche Rd West',
     price: 'AED 300–400 per couple (without alcohol)',
     website: 'conradabudhabietihadtowers.com',
@@ -64,7 +86,8 @@ const restaurants = [
   },
   {
     id: 'mr-kim', name: 'Mr Kim',
-    cuisine: 'Korean Steakhouse', category: 'fineDining', occasion: ['couples'],
+    cuisine: 'Korean Steakhouse', category: 'fineDining', occasion: ['fineDining', 'couples'],
+    michelin: null,
     address: 'Yas Mall, Yas Island',
     price: 'AED 250–350 per person',
     website: '@mrkim.ae (Instagram)',
@@ -72,25 +95,46 @@ const restaurants = [
   },
   {
     id: 'butcher-and-still', name: 'Butcher & Still',
-    cuisine: 'American Steakhouse', category: 'fineDining', occasion: ['couples', 'family'],
+    cuisine: 'American Steakhouse', category: 'fineDining', occasion: ['fineDining', 'couples', 'family'],
+    michelin: 'Selected',
     address: 'Four Seasons Abu Dhabi, Al Maryah Island',
     price: 'AED 350+ per person',
     website: 'fourseasons.com/abudhabi',
-    notes: "1920s speakeasy-style decor. Named the city's best steakhouse by several guides — Tomahawk, oysters Rockefeller.",
+    notes: "1920s speakeasy-style decor. Named the city's best steakhouse by several guides — Tomahawk, oysters Rockefeller. Featured in the Michelin Guide's Selected tier.",
   },
   {
     id: 'marco-pierre-white-steakhouse', name: 'Marco Pierre White Steakhouse & Grill',
-    cuisine: 'Steakhouse', category: 'fineDining', occasion: ['couples'],
+    cuisine: 'Steakhouse', category: 'fineDining', occasion: ['fineDining', 'couples'],
+    michelin: null,
     address: 'Fairmont Bab Al Bahr, Corniche Rd',
     price: 'AED 300–400 per person',
     website: 'fairmont.com/bab-al-bahr-abu-dhabi',
     notes: 'Classic, formal steakhouse experience overlooking the Grand Mosque.',
   },
+  {
+    id: 'mate-park-hyatt', name: 'Maté',
+    cuisine: 'Argentinian / Lebanese', category: 'fineDining', occasion: ['fineDining', 'couples'],
+    michelin: null,
+    address: 'Park Hyatt Abu Dhabi Hotel & Villas, Saadiyat Island',
+    price: 'AED 300–400 per person',
+    website: 'hyattrestaurants.com',
+    notes: 'Wood-fired steakhouse over two floors — sit at the counter for the full open-kitchen experience; book ahead.',
+  },
+  {
+    id: 'buddha-bar-beach', name: 'Buddha-Bar Beach Abu Dhabi',
+    cuisine: 'Asian Fusion', category: 'fineDining', occasion: ['fineDining', 'couples'],
+    michelin: null,
+    address: 'The St Regis Saadiyat Island Resort, Saadiyat Island',
+    price: 'AED 300+ per person',
+    website: 'buddhabarbeachabudhabi.com',
+    notes: 'Day-to-night beachfront dining with sunset views over Saadiyat — East-meets-West menu.',
+  },
 
   // ---------- Must-Try / Iconic Local ----------
   {
     id: 'al-fanar', name: 'Al Fanar Restaurant & Cafe',
-    cuisine: 'Emirati', category: 'mustTry', occasion: ['family', 'mustTry'],
+    cuisine: 'Emirati', category: 'mustTry', occasion: ['mustTry', 'family', 'casual'],
+    michelin: null,
     address: 'The Fountains, Yas Mall, Yas Island (multiple branches)',
     price: 'AED 80–150 per person',
     website: 'alfanarrestaurant.com',
@@ -98,7 +142,8 @@ const restaurants = [
   },
   {
     id: 'mosaic', name: 'Mosaic',
-    cuisine: 'Lebanese', category: 'mustTry', occasion: ['family', 'casual'],
+    cuisine: 'Lebanese', category: 'mustTry', occasion: ['mustTry', 'family', 'casual'],
+    michelin: null,
     address: 'Multiple branches across Abu Dhabi',
     price: 'AED 100–180 per person',
     website: 'mosaicuae.com',
@@ -106,7 +151,8 @@ const restaurants = [
   },
   {
     id: 'lebanese-flower', name: 'Lebanese Flower (Zahrat Lebnan)',
-    cuisine: 'Lebanese', category: 'casual', occasion: ['family', 'mustTry'],
+    cuisine: 'Lebanese', category: 'casual', occasion: ['casual', 'family', 'mustTry'],
+    michelin: null,
     address: 'Multiple branches, incl. Electra St, Abu Dhabi',
     price: 'AED 40–80 per person',
     website: 'No official site — check Google Maps listing',
@@ -116,7 +162,8 @@ const restaurants = [
   // ---------- Casual ----------
   {
     id: 'saudi-kitchen', name: 'Saudi Kitchen',
-    cuisine: 'Saudi / Arabic', category: 'casual', occasion: ['family'],
+    cuisine: 'Saudi / Arabic', category: 'casual', occasion: ['casual', 'family'],
+    michelin: null,
     address: 'Near Mushrif Mall, Al Mushrif, Abu Dhabi',
     price: 'AED 50–90 per person',
     website: 'No official site — check Google Maps listing',
@@ -124,7 +171,8 @@ const restaurants = [
   },
   {
     id: 'wadi-luqaimat-chebab', name: 'Wadi Luqaimat and Chebab Restaurant',
-    cuisine: 'Emirati', category: 'casual', occasion: ['family'],
+    cuisine: 'Emirati', category: 'casual', occasion: ['casual', 'family'],
+    michelin: null,
     address: 'Al Nasr Tower 2, Al Murror St / Al Aman St, Abu Dhabi',
     price: 'AED 30–60 per person',
     website: 'No official site — check Google Maps listing',
@@ -132,7 +180,8 @@ const restaurants = [
   },
   {
     id: 'jones-the-grocer', name: 'Jones the Grocer',
-    cuisine: 'International / Café', category: 'casual', occasion: ['family'],
+    cuisine: 'International / Café', category: 'casual', occasion: ['casual', 'family'],
+    michelin: null,
     address: 'Multiple branches, incl. Al Maryah Island, Abu Dhabi',
     price: 'AED 80–150 per person',
     website: 'jonesthegrocer.com',
@@ -140,7 +189,8 @@ const restaurants = [
   },
   {
     id: 'dinos-bistro-italiano', name: "Dino's Bistro Italiano",
-    cuisine: 'Italian', category: 'casual', occasion: ['family'],
+    cuisine: 'Italian', category: 'casual', occasion: ['casual', 'family'],
+    michelin: null,
     address: 'The Pearl Rotana, Khaleej Al Arabi St, Capital Gate Area, Abu Dhabi',
     price: 'AED 90–150 per person',
     website: 'No official site — check hotel listing',
@@ -148,29 +198,95 @@ const restaurants = [
   },
   {
     id: 'sandersons', name: "Sanderson's",
-    cuisine: 'International / Gastropub', category: 'casual', occasion: ['family'],
+    cuisine: 'International / Gastropub', category: 'casual', occasion: ['casual', 'family'],
+    michelin: null,
     address: 'Al Seef Village Mall, Abu Dhabi',
     price: 'AED 35–100 per person (kids menu ~AED 35)',
     website: 'No official site — check Al Seef Village listing',
     notes: 'Strong kids menu (nuggets, fish and chips) alongside a varied adult menu (poke bowls, sea bass).',
   },
 
-  // ---------- Couples / Romantic (beyond fine dining list above) ----------
+  // ---------- New additions ----------
   {
-    id: 'buddha-bar-beach', name: 'Buddha-Bar Beach Abu Dhabi',
-    cuisine: 'Asian Fusion', category: 'couples', occasion: ['couples'],
-    address: 'The St Regis Saadiyat Island Resort, Saadiyat Island',
-    price: 'AED 300+ per person',
-    website: 'buddhabarbeachabudhabi.com',
-    notes: 'Day-to-night beachfront dining with sunset views over Saadiyat — East-meets-West menu.',
+    id: 'marmellata', name: 'Marmellata Bakery',
+    cuisine: 'Italian / Pizzeria', category: 'mustTry', occasion: ['mustTry', 'casual'],
+    michelin: null,
+    address: 'Souk Al Mina, Zayed Port - Freezone 2, Abu Dhabi',
+    price: 'AED 45–90 per person',
+    website: 'marmellatalove.com',
+    notes: 'Ranked among MENA\'s 50 Best Restaurants — a father-son pizzeria that grew from a one-night-a-week hatch into one of the city\'s most talked-about spots. Five rotating pizzas plus stuffed focaccia; go early, it sells out.',
   },
   {
-    id: 'mate-park-hyatt', name: 'Maté',
-    cuisine: 'Argentinian / Lebanese', category: 'fineDining', occasion: ['couples'],
-    address: 'Park Hyatt Abu Dhabi Hotel & Villas, Saadiyat Island',
-    price: 'AED 300–400 per person',
-    website: 'hyattrestaurants.com',
-    notes: 'Wood-fired steakhouse over two floors — sit at the counter for the full open-kitchen experience; book ahead.',
+    id: 'antonia-mamsha', name: 'Antonia',
+    cuisine: 'Italian / Pizzeria', category: 'casual', occasion: ['casual', 'family'],
+    michelin: 'Selected',
+    address: 'Turquoise, Jacques Chirac St, Saadiyat Cultural District, Mamsha Al Saadiyat',
+    price: 'AED 120–200 per person',
+    website: 'No official site — check Michelin Guide or Google Maps listing',
+    notes: 'Beachside Italian on Mamsha Al Saadiyat overlooking the Gulf — feels like an American pizza parlour with sourdough-crust pizza (50-year-old starter dough) and generous pasta and carpaccio. Family-friendly. Featured in the Michelin Guide.',
+  },
+  {
+    id: 'niri-mamsha', name: 'NIRI Restaurant & Bar',
+    cuisine: 'Japanese', category: 'fineDining', occasion: ['fineDining', 'couples', 'mustTry'],
+    michelin: null,
+    address: 'Mamsha Al Saadiyat, Al Saadiyat Island, Abu Dhabi',
+    price: 'AED 250–350 per person',
+    website: 'nirirestaurant.com',
+    notes: 'Ranked in MENA\'s 50 Best Restaurants — a stylish yakitori-sushi-highball bar from a Zuma/LPM veteran, with a sushi counter and beachfront terrace. Time the visit for sunset.',
+  },
+  {
+    id: 'rozana-al-reem', name: 'Rozana Al Reem Restaurant & Cafe',
+    cuisine: 'Levantine / Syrian', category: 'casual', occasion: ['casual', 'family'],
+    michelin: null,
+    address: 'RR2, Al Reem Island (near Najmat Abu Dhabi), Abu Dhabi',
+    price: 'AED 50–100 per person',
+    website: 'No official site — check Google Maps listing',
+    notes: 'Local Syrian/Levantine spot on Reem Island, popular for its heritage-style decor and fair prices. Open late (until 1–2 AM). Good casual grill and mezze stop.',
+  },
+  {
+    id: 'vietnamese-pho-reem', name: 'Vietnamese Pho Restaurant',
+    cuisine: 'Vietnamese', category: 'casual', occasion: ['casual', 'mustTry'],
+    michelin: null,
+    address: 'Al Reem Island, Abu Dhabi (residential tower)',
+    price: 'AED 50–80 per person',
+    website: 'vietnamesephorestaurant.com',
+    notes: 'Named "Best Budget Restaurant" by Time Out Abu Dhabi (2023). Unassuming, tucked into a residential tower — Hoi An lanterns, big bowls of pho, papaya salad, imperial spring rolls. One of the only proper Vietnamese spots in the city.',
+  },
+  {
+    id: 'al-ulya-portuguese', name: 'Al Ulya Portuguese Flavours Cafe',
+    cuisine: 'Portuguese', category: 'casual', occasion: ['casual', 'mustTry'],
+    michelin: null,
+    address: 'Al Ramlah St, Building 8, Al Nahyan/Al Wahda area, Abu Dhabi',
+    price: 'AED 40–80 per person (bakery items); AED 125–150pp for a full meal',
+    website: 'No official site — check Google Maps/Tripadvisor listing',
+    notes: 'A genuine hidden gem — family-run Portuguese bakery and café near the bus station. Pastel de nata, bacalhau, francesinha, coconut bread. Signage is in Portuguese; ask staff for suggestions if unsure.',
+  },
+  {
+    id: 'lpm-galleria', name: 'LPM Restaurant & Bar (La Petite Maison)',
+    cuisine: 'French Mediterranean', category: 'fineDining', occasion: ['fineDining', 'business', 'couples'],
+    michelin: 'Selected',
+    address: 'Level 1, The Galleria, Al Maryah Island, Abu Dhabi',
+    price: 'AED 300–450 per person (business lunch deals available)',
+    website: 'lpmrestaurants.com/abu-dhabi',
+    notes: 'Niçoise-inspired French Mediterranean fine dining with a sunny waterfront terrace. Popular for weekday business lunch deals as well as elegant evening dining — thinly sliced octopus, salt-baked sea bass, legendary lamb cutlets.',
+  },
+  {
+    id: 'craft-galleria', name: 'CRAFT by Side Hustle',
+    cuisine: 'Gastropub / Microbrewery', category: 'bar', occasion: ['bar', 'casual', 'couples'],
+    michelin: null,
+    address: 'The Galleria, Al Maryah Island, Abu Dhabi',
+    price: 'AED 100–180 per person',
+    website: 'No official site — check @craft_by_sidehustle on Instagram',
+    notes: 'The UAE\'s first commercial microbrewery and gastropub — 14 in-house beers on tap, quiz nights, live music, and Louisiana-style smokehouse food. One of only two bars on Al Reem/Al Maryah, and a genuinely new-to-the-region concept.',
+  },
+  {
+    id: 'din-tai-fung-galleria', name: 'Din Tai Fung',
+    cuisine: 'Taiwanese / Chinese', category: 'mustTry', occasion: ['mustTry', 'family', 'casual'],
+    michelin: null,
+    address: 'Ground & First Level, The Galleria, Al Maryah Island, Abu Dhabi',
+    price: 'AED 100–180 per person',
+    website: 'dintaifungae.com',
+    notes: 'World-famous Taiwanese dumpling chain, Michelin-starred at its Hong Kong original. Xiaolongbao (soup dumplings) are the draw — go for the chicken xiaolongbao and Szechuan shrimp wontons. Rarely a long wait at this branch.',
   },
 
 ];

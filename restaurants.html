@@ -102,6 +102,21 @@
     </div>
   </main>
 
+  <!-- More guides -->
+  <section class="max-w-[1200px] mx-auto px-md md:px-xl py-lg border-t border-outline-variant">
+    <p class="font-label-sm uppercase tracking-wide text-on-surface-variant mb-sm">More Abu Dhabi food guides</p>
+    <div class="flex flex-wrap gap-md">
+      <a href="https://www.timeoutabudhabi.com/food-drink" target="_blank" rel="noopener" class="glass-card rounded-lg px-4 py-3 flex items-center gap-2 hover:border-soft-gold transition-colors font-body-md text-on-surface-variant hover:text-soft-gold">
+        <span class="material-symbols-outlined" style="font-size:20px">open_in_new</span>
+        Time Out Abu Dhabi — Food & Drink
+      </a>
+      <a href="https://www.bestbitesuae.com/" target="_blank" rel="noopener" class="glass-card rounded-lg px-4 py-3 flex items-center gap-2 hover:border-soft-gold transition-colors font-body-md text-on-surface-variant hover:text-soft-gold">
+        <span class="material-symbols-outlined" style="font-size:20px">open_in_new</span>
+        Best Bites UAE
+      </a>
+    </div>
+  </section>
+
   <div id="modal-backdrop" class="hidden fixed inset-0 bg-black/60 z-40 items-center justify-center p-md">
     <div id="modal-card" class="glass-card rounded-xl max-w-lg w-full p-lg relative bg-surface-container-lowest">
       <button id="modal-close" class="absolute top-4 right-4 text-on-surface-variant hover:text-soft-gold">
@@ -114,13 +129,43 @@
 <script src="restaurants-data.js"></script>
 <script>
   const CATEGORY_LABELS = restaurantCategories;
-  const OCCASION_LABELS = { fineDining: 'Fine Dining', casual: 'Casual', mustTry: 'Must-Try', family: 'Family', couples: 'Couples' };
-  const OCCASION_ICONS = { fineDining: 'star', casual: 'lunch_dining', mustTry: 'local_fire_department', family: 'family_restroom', couples: 'favorite' };
+  const OCCASION_LABELS = { fineDining: 'Fine Dining', casual: 'Casual', mustTry: 'Must-Try', family: 'Family', couples: 'Couples', bar: 'Bar / Pub', business: 'Business Lunch' };
+  const OCCASION_ICONS = { fineDining: 'star', casual: 'lunch_dining', mustTry: 'local_fire_department', family: 'family_restroom', couples: 'favorite', bar: 'sports_bar', business: 'work' };
 
   let activeOccasion = 'all';
   let activeCuisine = 'all';
   let activePrice = 'all';
+  let michelinOnly = false;
   let searchTerm = '';
+
+  function michelinBadge(r, size = 'sm') {
+    if (!r.michelin) return '';
+    const starred = r.michelin.toLowerCase().includes('star');
+    const cls = size === 'sm' ? 'text-[10px] px-2 py-0.5' : 'text-label-sm px-3 py-1';
+    const icon = starred ? '★' : '🎗';
+    return `<span class="rounded-full ${cls} font-semibold" style="background:var(--chip-active-bg); color:var(--chip-active-fg);">${icon} ${r.michelin}</span>`;
+  }
+
+  // Builds a Google Maps directions URL from a free-text address.
+  function mapsDirectionsUrl(address) {
+    return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address + ', Abu Dhabi')}`;
+  }
+
+  // Resolves the `website` field into a real, clickable link + label.
+  // Handles three shapes seen in the data: a bare domain ("zumarestaurant.com"),
+  // an Instagram handle ("@mrkim.ae (Instagram)"), or a "no official site" note.
+  function resolveWebsite(website) {
+    if (!website) return null;
+    const igMatch = website.match(/@([\w.]+)/);
+    if (igMatch && /instagram/i.test(website)) {
+      return { href: `https://instagram.com/${igMatch[1]}`, label: website, icon: 'photo_camera' };
+    }
+    if (/no official site/i.test(website)) {
+      return null; // nothing to link — shown as plain text instead
+    }
+    const domain = website.replace(/^https?:\/\//, '').split('/')[0];
+    return { href: `https://${domain}`, label: website, icon: 'language' };
+  }
 
   function refreshThemeIcon() {
     document.getElementById('theme-toggle-icon').textContent = getTheme() === 'light' ? 'dark_mode' : 'light_mode';
@@ -161,6 +206,17 @@
       chipWrap.appendChild(btn);
     });
 
+    const michelinChip = document.createElement('button');
+    michelinChip.className = 'chip rounded-full px-4 py-2 font-label-lg flex items-center gap-1';
+    michelinChip.innerHTML = `★ Michelin`;
+    michelinChip.dataset.active = 'false';
+    michelinChip.onclick = () => {
+      michelinOnly = !michelinOnly;
+      michelinChip.dataset.active = michelinOnly ? 'true' : 'false';
+      render();
+    };
+    chipWrap.appendChild(michelinChip);
+
     const cuisines = [...new Set(restaurants.map(r => r.cuisine))].sort();
     const cuisineSel = document.getElementById('cuisine-filter');
     cuisineSel.innerHTML = `<option value="all">All cuisines</option>` +
@@ -198,6 +254,7 @@
       if (activeOccasion !== 'all' && !r.occasion.includes(activeOccasion)) return false;
       if (activeCuisine !== 'all' && r.cuisine !== activeCuisine) return false;
       if (activePrice !== 'all' && priceBucket(r.price) !== activePrice) return false;
+      if (michelinOnly && !r.michelin) return false;
       if (searchTerm && !(r.name.toLowerCase().includes(searchTerm) || r.cuisine.toLowerCase().includes(searchTerm))) return false;
       return true;
     });
@@ -217,13 +274,23 @@
           <p class="font-headline-sm text-on-surface leading-snug">${r.name}</p>
           <div class="flex gap-1 pt-1 shrink-0">${dotsHtml}</div>
         </div>
-        <p class="font-label-sm uppercase tracking-wide text-soft-gold mb-sm">${r.cuisine} · ${CATEGORY_LABELS[r.category]}</p>
+        <div class="flex items-center flex-wrap gap-2 mb-sm">
+          <p class="font-label-sm uppercase tracking-wide text-soft-gold">${r.cuisine} · ${CATEGORY_LABELS[r.category]}</p>
+          ${michelinBadge(r)}
+        </div>
         <p class="font-body-md text-on-surface-variant line-clamp-2">${r.notes}</p>
       </div>
-      <div class="flex items-center gap-1 mt-md font-body-md text-on-surface-variant">
+      <a href="${mapsDirectionsUrl(r.address)}" target="_blank" rel="noopener" class="flex items-center gap-1 mt-md font-body-md text-on-surface-variant hover:text-soft-gold transition-colors" onclick="event.stopPropagation()">
         <span class="material-symbols-outlined" style="font-size:18px">place</span>
-        <span class="truncate">${r.address}</span>
-      </div>`;
+        <span class="truncate underline underline-offset-2">${r.address}</span>
+      </a>
+      ${(() => {
+        const w = resolveWebsite(r.website);
+        return w ? `<a href="${w.href}" target="_blank" rel="noopener" class="flex items-center gap-1 mt-1 font-body-md text-on-surface-variant hover:text-soft-gold transition-colors" onclick="event.stopPropagation()">
+          <span class="material-symbols-outlined" style="font-size:18px">${w.icon}</span>
+          <span class="truncate underline underline-offset-2">${w.label}</span>
+        </a>` : '';
+      })()}`;
     div.onclick = () => openModal(r);
     return div;
   }
@@ -254,19 +321,31 @@
       `<span class="price-dot ${i < dots ? 'bg-soft-gold' : 'bg-outline-variant'}"></span>`).join('');
     const occasionTags = r.occasion.map(o => `<span class="chip rounded-full px-3 py-1 font-label-sm" data-active="true">${OCCASION_LABELS[o]}</span>`).join(' ');
 
+    const websiteInfo = resolveWebsite(r.website);
+    const websiteRow = websiteInfo
+      ? `<a href="${websiteInfo.href}" target="_blank" rel="noopener" class="flex items-start gap-2 font-body-md text-on-surface-variant hover:text-soft-gold transition-colors mb-md">
+           <span class="material-symbols-outlined" style="font-size:20px">${websiteInfo.icon}</span>
+           <span class="underline underline-offset-2">${websiteInfo.label}</span>
+         </a>`
+      : `<div class="flex items-start gap-2 font-body-md text-on-surface-variant mb-md">
+           <span class="material-symbols-outlined" style="font-size:20px">language</span>
+           <span>${r.website}</span>
+         </div>`;
+
     document.getElementById('modal-content').innerHTML = `
       <p class="font-label-sm uppercase tracking-wide text-soft-gold mb-1">${r.cuisine} · ${CATEGORY_LABELS[r.category]}</p>
-      <p class="font-display-lg-mobile text-on-surface mb-sm">${r.name}</p>
+      <div class="flex items-center gap-sm mb-sm flex-wrap">
+        <p class="font-display-lg-mobile text-on-surface">${r.name}</p>
+        ${michelinBadge(r, 'lg')}
+      </div>
       <div class="flex gap-1 mb-md items-center">${dotsHtml}<span class="font-body-md text-on-surface-variant ml-2">${r.price}</span></div>
       <p class="font-body-lg text-on-surface mb-md">${r.notes}</p>
-      <div class="flex items-start gap-2 font-body-md text-on-surface-variant mb-2">
+      <a href="${mapsDirectionsUrl(r.address)}" target="_blank" rel="noopener" class="flex items-start gap-2 font-body-md text-on-surface-variant hover:text-soft-gold transition-colors mb-2">
         <span class="material-symbols-outlined" style="font-size:20px">place</span>
-        <span>${r.address}</span>
-      </div>
-      <div class="flex items-start gap-2 font-body-md text-on-surface-variant mb-md">
-        <span class="material-symbols-outlined" style="font-size:20px">language</span>
-        <span>${r.website}</span>
-      </div>
+        <span class="underline underline-offset-2">${r.address}</span>
+        <span class="material-symbols-outlined" style="font-size:16px">open_in_new</span>
+      </a>
+      ${websiteRow}
       <div class="flex flex-wrap gap-1">${occasionTags}</div>`;
     document.getElementById('modal-backdrop').classList.remove('hidden');
     document.getElementById('modal-backdrop').classList.add('flex');
