@@ -170,12 +170,12 @@
   </div>
 </footer>
 
+<script src="emirates.js"></script>
 <script src="data.js"></script>
 <script crossorigin="" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
   const params = new URLSearchParams(window.location.search);
-  const attr = ATTRACTIONS_BY_ID[params.get('id')] || ATTRACTIONS[0];
-  let miniMap; // created once, content re-rendered on language switch
+  let attr, miniMap, miniTileLayer, saveKey, saveIcon;
 
   function renderContent() {
     const name = tr(attr, 'name');
@@ -226,7 +226,7 @@
     nearbyContainer.innerHTML = '';
     getNearby(attr, 3).forEach(n => {
       const card = document.createElement('a');
-      card.href = `attraction.html?id=${n.id}`;
+      card.href = `attraction.html?id=${n.id}&emirate=${window.currentEmirateId}`;
       card.className = 'glass-card rounded-xl overflow-hidden group flex flex-col hover:border-soft-gold/50 transition-colors';
       card.innerHTML = `
         ${photoSlotHtml(n, 'h-40')}
@@ -275,7 +275,6 @@
     heroPlaceholder.innerHTML = `<span class="material-symbols-outlined ${heroIconTint}" style="font-size:220px">${attr.icon}</span>`;
   }
 
-  let miniTileLayer;
   function initMiniMap() {
     miniMap = L.map('mini-map', { zoomControl: false, dragging: true, scrollWheelZoom: false }).setView([attr.lat, attr.lng], 13);
     miniTileLayer = L.tileLayer(getMapTileUrl(getTheme()), {
@@ -287,17 +286,11 @@
     setTimeout(() => miniMap.invalidateSize(), 200);
   }
 
-  // Save / favorite (persisted locally so it survives between drives)
-  const saveKey = `ad-heritage-saved-${attr.id}`;
-  const saveIcon = document.getElementById('save-icon');
+  // Save / favorite (persisted locally so it survives between drives).
+  // saveKey/saveIcon are assigned inside init(), once `attr` is known.
   function refreshSaveIcon() {
     saveIcon.textContent = localStorage.getItem(saveKey) ? 'bookmark' : 'bookmark_border';
   }
-  document.getElementById('save-btn').addEventListener('click', () => {
-    if (localStorage.getItem(saveKey)) localStorage.removeItem(saveKey);
-    else localStorage.setItem(saveKey, '1');
-    refreshSaveIcon();
-  });
 
   // --- Language toggle ---
   function syncLangToggleUI() {
@@ -334,14 +327,40 @@
     renderHeroPhoto();
   });
 
-  refreshSaveIcon();
-  syncLangToggleUI();
-  syncThemeToggleUI();
-  renderContent();
-  renderHeroPhoto();
-  mountPhotos(document.getElementById('hero-image-container'));
-  renderGallery();
-  initMiniMap();
+  // --- Init: resolve which emirate this id belongs to before rendering ---
+  // If the URL says a different emirate than what's currently active
+  // (Abu Dhabi, loaded synchronously by data.js above), load that
+  // emirate's data file first — this is what makes a Dubai attraction's
+  // detail page work when linked from a Dubai popup/card.
+  async function init() {
+    const requestedEmirate = params.get('emirate') || getSelectedEmirateId();
+    if (requestedEmirate !== window.currentEmirateId) {
+      try {
+        await selectEmirate(requestedEmirate);
+      } catch (err) {
+        console.error('Could not load emirate', requestedEmirate, '— falling back to', window.currentEmirateId, err);
+      }
+    }
+
+    attr = ATTRACTIONS_BY_ID[params.get('id')] || ATTRACTIONS[0];
+    saveKey = `ad-heritage-saved-${attr.id}`;
+    saveIcon = document.getElementById('save-icon');
+    document.getElementById('save-btn').addEventListener('click', () => {
+      if (localStorage.getItem(saveKey)) localStorage.removeItem(saveKey);
+      else localStorage.setItem(saveKey, '1');
+      refreshSaveIcon();
+    });
+
+    refreshSaveIcon();
+    syncLangToggleUI();
+    syncThemeToggleUI();
+    renderContent();
+    renderHeroPhoto();
+    mountPhotos(document.getElementById('hero-image-container'));
+    renderGallery();
+    initMiniMap();
+  }
+  init();
 </script>
 </body>
 </html>

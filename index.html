@@ -44,6 +44,7 @@
       <p class="text-xs text-on-surface-variant" id="sidebar-tagline">by Stein</p>
     </div>
   </div>
+  <select id="emirate-select" class="w-full mb-sm bg-surface-container border border-outline-variant rounded-lg px-3 py-2 text-sm font-label-lg text-on-surface cursor-pointer"></select>
   <div class="flex items-center gap-sm mb-lg">
     <div class="flex items-center bg-surface-container rounded-full p-1 relative cursor-pointer border border-outline-variant flex-grow" id="lang-toggle">
       <div class="absolute w-1/2 h-full bg-secondary-container rounded-full left-0 transition-transform duration-300 ease-in-out" id="lang-indicator"></div>
@@ -81,6 +82,7 @@
     <div class="flex justify-between items-center w-full px-lg h-16">
       <span class="font-headline-sm text-headline-sm text-high-contrast-white">UAE Explorer</span>
       <div class="flex items-center gap-sm">
+        <select id="emirate-select-mobile" class="bg-surface-container border border-outline-variant rounded-full px-2 py-1 text-xs font-label-lg text-on-surface cursor-pointer"></select>
         <div class="flex items-center bg-surface-container rounded-full p-1 relative cursor-pointer" id="lang-toggle-mobile">
           <div class="absolute w-1/2 h-full bg-secondary-container rounded-full left-0 transition-transform duration-300 ease-in-out" id="lang-indicator-mobile"></div>
           <span class="relative z-10 px-3 py-0.5 text-xs font-semibold transition-colors" id="lang-en-mobile">EN</span>
@@ -167,6 +169,7 @@
   </button>
 </main>
 
+<script src="emirates.js"></script>
 <script src="data.js"></script>
 <script crossorigin="" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
@@ -259,7 +262,7 @@
     list.forEach(attr => {
       const name = tr(attr, 'name'), desc = tr(attr, 'description'), price = tr(attr, 'price');
       const card = document.createElement('a');
-      card.href = `attraction.html?id=${attr.id}`;
+      card.href = `attraction.html?id=${attr.id}&emirate=${window.currentEmirateId}`;
       card.className = 'group glass-card rounded-xl overflow-hidden hover:border-soft-gold/50 transition-all flex flex-col sm:flex-row border border-outline-variant';
       card.innerHTML = `
         ${photoSlotHtml(attr, 'w-full sm:w-40 h-40 sm:h-auto flex-shrink-0')}
@@ -317,7 +320,7 @@
     return `<div class="p-2 min-w-[170px]">
         <h4 class="font-label-lg text-sm font-bold mb-1">${tr(attr, 'name')}</h4>
         <p class="text-xs text-on-surface-variant mb-2">${categoryLabel(attr.category)}</p>
-        <a href="attraction.html?id=${attr.id}" class="block w-full text-center bg-secondary-container text-on-secondary-container text-xs font-bold py-1.5 rounded">${t('detailsBtn')}</a>
+        <a href="attraction.html?id=${attr.id}&emirate=${window.currentEmirateId}" class="block w-full text-center bg-secondary-container text-on-secondary-container text-xs font-bold py-1.5 rounded">${t('detailsBtn')}</a>
       </div>`;
   }
 
@@ -401,6 +404,7 @@
     buildCategoryUI();
     setActiveCategory(activeCategory);
     updateAllPopups();
+    buildEmirateSelector();
   }
 
   document.getElementById('lang-toggle').addEventListener('click', () => switchLanguage(getLang() === 'en' ? 'pt' : 'en'));
@@ -429,13 +433,59 @@
   document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
   document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
 
+  // --- Emirate selector ---
+  function buildEmirateSelector() {
+    const options = Object.values(EMIRATE_REGISTRY).map(e => {
+      const label = `${e.flag} ${getLang() === 'pt' ? e.namePt : e.nameEn}${e.comingSoon ? ' (' + (getLang() === 'pt' ? 'Em breve' : 'Coming soon') + ')' : ''}`;
+      return `<option value="${e.id}" ${e.comingSoon ? 'disabled' : ''}>${label}</option>`;
+    }).join('');
+    ['emirate-select', 'emirate-select-mobile'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.innerHTML = options;
+      el.value = window.currentEmirateId || getSelectedEmirateId();
+    });
+  }
+
+  async function handleEmirateChange(emirateId) {
+    if (emirateId === window.currentEmirateId) return;
+    const meta = EMIRATE_REGISTRY[emirateId];
+    try {
+      await selectEmirate(emirateId);
+    } catch (err) {
+      console.error(err);
+      buildEmirateSelector(); // revert the dropdown to the still-active emirate
+      return;
+    }
+    // Re-render everything against the newly active ATTRACTIONS/CATEGORIES.
+    buildCategoryUI();
+    setActiveCategory('all');
+    applyStaticText();
+    Object.values(markers).forEach(m => map.removeLayer(m));
+    markers = {};
+    addMarkers();
+    map.setView(meta.center, meta.zoom);
+    buildEmirateSelector();
+  }
+
+  document.getElementById('emirate-select').addEventListener('change', (e) => handleEmirateChange(e.target.value));
+  document.getElementById('emirate-select-mobile').addEventListener('change', (e) => handleEmirateChange(e.target.value));
+
   applyStaticText();
   syncLangToggleUI();
   syncThemeToggleUI();
   buildCategoryUI();
+  buildEmirateSelector();
   setActiveCategory('all');
   document.addEventListener('DOMContentLoaded', initMap);
   initMap();
+
+  // data.js's own activateEmirate('abu-dhabi') call already handles the
+  // default case synchronously. If the visitor last picked a different
+  // (available) emirate, jump straight there — worth the brief extra
+  // render since it avoids a flash of the wrong emirate's map/list.
+  const _savedEmirate = getSelectedEmirateId();
+  if (_savedEmirate !== 'abu-dhabi') handleEmirateChange(_savedEmirate);
 </script>
 </body>
 </html>

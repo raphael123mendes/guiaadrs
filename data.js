@@ -8,7 +8,8 @@
 // once you've added real photos to an /images folder next to this file.
 // Leave it null and the site shows a gradient + icon placeholder instead.
 
-const CATEGORIES = [
+
+const ABU_DHABI_CATEGORIES = [
   { id: 'heritage', icon: 'account_balance', en: 'Culture & Heritage', pt: 'Cultura e Patrimônio' },
   { id: 'art-museums', icon: 'museum', en: 'Art & Museums', pt: 'Arte e Museus' },
   { id: 'theme-parks', icon: 'attractions', en: 'Theme Parks & Entertainment', pt: 'Parques Temáticos e Entretenimento' },
@@ -17,62 +18,8 @@ const CATEGORIES = [
   { id: 'adventure', icon: 'landscape', en: 'Adventure & Desert', pt: 'Aventura e Deserto' },
 ];
 
-const UI_STRINGS = {
-  en: {
-    siteName: 'UAE Explorer', tagline: 'by Stein',
-    discoverTitle: 'Discover the UAE',
-    discoverSubtitle: "Every stop on your family's road trip — hours, directions, history, and fun facts for the road.",
-    searchPlaceholder: 'Search attractions, e.g. mosque, Ferrari, mangrove...',
-    allPlaces: 'All Places', fullMap: 'Full Map',
-    sidebarNote: 'Curated spots across the UAE — pick a place, get directions, and go.',
-    locations: 'Locations', location: 'Location',
-    noResults: 'No attractions match your search.',
-    mapBtn: 'Map', detailsBtn: 'View Details', exploreBtn: 'Explore',
-    footerTag: 'A family & friends road-trip guide to the UAE. Built for the tablet in your car.',
-    footerStats: 'attractions · 6 categories',
-    backToDiscover: 'Back to Discover',
-    getDirections: 'Get Directions',
-    aboutTitle: 'About the Experience',
-    funFactsTitle: 'Fun Facts',
-    onMapTitle: 'On the Map',
-    keyDetailsTitle: 'Key Details',
-    hoursLabel: 'Visiting Hours', priceLabel: 'Price', climateLabel: 'Climate Note', bestTimeLabel: 'Best Time to Visit',
-    hoursNote: 'Hours can change seasonally — worth a quick check before you go.',
-    nearbyTitle: 'Nearby Experiences',
-    footerBack: '← Back to all attractions',
-    galleryTitle: 'Visual Journey',
-    priceAll: 'Price: All', priceFree: 'Free', pricePaid: 'Paid', priceVaries: 'Varies',
-    settingAll: 'Setting: All', settingIndoor: 'Indoor', settingOutdoor: 'Outdoor', settingMixed: 'Mixed',
-  },
-  pt: {
-    siteName: 'UAE Explorer', tagline: 'por Stein',
-    discoverTitle: 'Descubra os Emirados',
-    discoverSubtitle: 'Cada parada da viagem em família — horários, direções, história e curiosidades para o caminho.',
-    searchPlaceholder: 'Buscar atrações, ex: mesquita, Ferrari, mangue...',
-    allPlaces: 'Todos os Lugares', fullMap: 'Mapa Completo',
-    sidebarNote: 'Lugares selecionados por todos os Emirados — escolha um destino, peça direções e vá.',
-    locations: 'Locais', location: 'Local',
-    noResults: 'Nenhuma atração corresponde à sua busca.',
-    mapBtn: 'Mapa', detailsBtn: 'Ver Detalhes', exploreBtn: 'Explorar',
-    footerTag: 'Um guia de viagem em família e amigos pelos Emirados. Feito para o tablet no carro.',
-    footerStats: 'atrações · 6 categorias',
-    backToDiscover: 'Voltar para Descobrir',
-    getDirections: 'Obter Direções',
-    aboutTitle: 'Sobre a Experiência',
-    funFactsTitle: 'Curiosidades',
-    onMapTitle: 'No Mapa',
-    keyDetailsTitle: 'Detalhes Principais',
-    hoursLabel: 'Horário de Visita', priceLabel: 'Preço', climateLabel: 'Nota sobre o Clima', bestTimeLabel: 'Melhor Horário para Visitar',
-    hoursNote: 'Os horários podem mudar conforme a época — vale a pena confirmar antes de ir.',
-    nearbyTitle: 'Experiências Próximas',
-    footerBack: '← Voltar para todas as atrações',
-    galleryTitle: 'Galeria de Fotos',
-    priceAll: 'Preço: Todos', priceFree: 'Gratuito', pricePaid: 'Pago', priceVaries: 'Varia',
-    settingAll: 'Ambiente: Todos', settingIndoor: 'Coberto', settingOutdoor: 'Ao ar livre', settingMixed: 'Misto',
-  }
-};
 
-const ATTRACTIONS = [
+const ABU_DHABI_ATTRACTIONS = [
   // ---------- Culture & Heritage ----------
   {
     id: 'grand-mosque', category: 'heritage', icon: 'mosque', lat: 24.4128334, lng: 54.4749754,
@@ -1226,50 +1173,11 @@ const ATTRACTIONS = [
 
 ];
 
-const ATTRACTIONS_BY_ID = Object.fromEntries(ATTRACTIONS.map(a => [a.id, a]));
 
-// --- Language helpers ---
-function getLang() {
-  return localStorage.getItem('ad-lang') === 'pt' ? 'pt' : 'en';
-}
-function setLang(lang) {
-  localStorage.setItem('ad-lang', lang === 'pt' ? 'pt' : 'en');
-}
-function t(key) {
-  return UI_STRINGS[getLang()][key] || UI_STRINGS.en[key] || key;
-}
-function tr(attraction, field) {
-  const lang = getLang();
-  return (attraction[lang] && attraction[lang][field] !== undefined) ? attraction[lang][field] : attraction.en[field];
-}
-function categoryLabel(catId) {
-  const cat = CATEGORIES.find(c => c.id === catId);
-  if (!cat) return catId;
-  return cat[getLang()] || cat.en;
-}
-
-function getCategory(id) {
-  return CATEGORIES.find(c => c.id === id);
-}
-
-// Returns the image to try loading for an attraction:
-// - if `image` is explicitly set on the attraction, use that
-// - otherwise, guess `images/{id}.jpg` — drop a file with that exact
-//   name into an /images folder and it'll pick it up automatically,
-//   with zero code changes.
-function getImageSrc(attraction) {
-  return attraction.image || `images/${attraction.id}.jpg`;
-}
-
-function getNearby(attraction, count = 3) {
-  const distance = (a, b) => Math.hypot(a.lat - b.lat, a.lng - b.lng);
-  return ATTRACTIONS
-    .filter(a => a.id !== attraction.id)
-    .sort((a, b) => {
-      const sameCatA = a.category === attraction.category ? 0 : 1;
-      const sameCatB = b.category === attraction.category ? 0 : 1;
-      if (sameCatA !== sameCatB) return sameCatA - sameCatB;
-      return distance(a, attraction) - distance(b, attraction);
-    })
-    .slice(0, count);
-}
+// Register this emirate's data with the shared registry (see emirates.js).
+// activateEmirate() also points the ATTRACTIONS/CATEGORIES/ATTRACTIONS_BY_ID
+// globals at this data immediately, since Abu Dhabi is the default emirate
+// loaded synchronously on first page load — no extra step needed for the
+// site to work exactly as before.
+registerEmirate('abu-dhabi', { categories: ABU_DHABI_CATEGORIES, attractions: ABU_DHABI_ATTRACTIONS });
+activateEmirate('abu-dhabi');
